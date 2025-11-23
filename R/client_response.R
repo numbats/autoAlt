@@ -1,11 +1,17 @@
 #' Function to generate alt-text
-#' @param file_path Path to the QMD/RMD file
+#' @param flnm Path and name of the QMD/RMD file
 #' @param api API key
+#' @param outfile Path and name of file to write to
 #' @param userinstruct Optional user instruction. This will be appended to the system prompt.
-generate_alt_text <- function(file_path = NULL,api = NULL, userinstruct = ""){
+generate_alt_text <- function(flnm = NULL, outfile = NULL, api = NULL, userinstruct = ""){
 
-  if (is.null(file_path)){
+  if (is.null(flnm)){
     stop("Missing file path")
+  }
+
+  if (is.null(outfile)){
+    outfile = "alt-text.txt"
+    warning("Writing to alt-text.txt")
   }
 
   if (is.null(api)){
@@ -17,7 +23,7 @@ generate_alt_text <- function(file_path = NULL,api = NULL, userinstruct = ""){
   }
 
 
-  content <- extract_ggplot_code(file_path)
+  content <- extract_ggplot_code(flnm)
 
   body_list <- list(
     model = "gpt-4.1",
@@ -37,8 +43,8 @@ generate_alt_text <- function(file_path = NULL,api = NULL, userinstruct = ""){
     sep = "", collapse = "\n"
   )
 
-  writeLines(alt_text, "alt-text.txt")
-  print("Output saved to alt-text.txt")
+  writeLines(alt_text, outfile)
+  print(paste("Output saved to ", outfile))
 
 
 }

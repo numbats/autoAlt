@@ -1,0 +1,72 @@
+---
+title: "Sample Research Paper"
+author: "Chat-GPT"
+date: "2025-09-10"
+format: pdf
+---
+
+```{r setup}
+library(ggplot2)
+data(mtcars)
+```
+
+# Introduction
+
+This report provides an exploratory analysis of the mtcars dataset, a classic dataset that contains fuel consumption and design specifications for 32 car models. The dataset includes variables such as miles per gallon (mpg), horsepower (hp), weight (wt), number of cylinders (cyl), and transmission type (am). Using ggplot2, we visualize key relationships between these variables to better understand how engine characteristics and design features affect fuel efficiency.
+
+# MPG vs Horsepower
+
+```{r}
+#| label: fig-horsepower
+ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point(color = "steelblue") +
+  labs(
+    title = "Miles per Gallon vs Horsepower",
+    x = "Horsepower (hp)",
+    y = "Miles per Gallon (mpg)"
+  ) +
+  theme_minimal()
+
+```
+
+@fig-horsepower shows the relationship between miles per gallon (mpg) and horsepower (hp) in the dataset. As expected, there is a negative correlation: cars with higher horsepower generally tend to have lower fuel efficiency. This inverse relationship highlights the trade-off between engine power and fuel economy.
+
+# MPG by Number of Cylinders
+
+```{r fig-cylinders}
+ggplot(mtcars, aes(x = factor(cyl), y = mpg, fill = factor(cyl))) +
+  geom_boxplot() +
+  labs(
+    title = "Distribution of MPG by Number of Cylinders",
+    x = "Number of Cylinders",
+    y = "Miles per Gallon (mpg)",
+    fill = "Cylinders"
+  ) +
+  theme_minimal()
+
+```
+
+This boxplot (@fig-cylinders) illustrates how fuel efficiency (mpg) varies by the number of cylinders in a car's engine. Cars with 4 cylinders tend to have the highest mpg, while 8-cylinder cars generally show the lowest mpg values. This reinforces the idea that larger engines are typically less fuel efficient.
+
+# Weight vs MPG, Colored by Transmission Type
+
+```{r fig-weight-MPG}
+ggplot(mtcars, aes(x = wt, y = mpg, color = factor(am))) +
+  geom_point(size = 3) +
+  labs(
+    title = "Car Weight vs MPG by Transmission Type",
+    x = "Weight (1000 lbs)",
+    y = "Miles per Gallon (mpg)",
+    color = "Transmission\n(0 = Automatic, 1 = Manual)"
+  ) +
+  theme_minimal()
+
+```
+
+@fig-weight-MPG explores how car weight influences fuel efficiency, while also distinguishing between automatic and manual transmissions. Heavier cars tend to have lower mpg, consistent with expectations. Interestingly, manual transmission cars (coded as 1) tend to show slightly better mpg than automatics, particularly in mid-weight ranges.
+
+# Conclusion
+
+This analysis of the mtcars dataset reveals several key insights into how car design impacts fuel efficiency. Cars with higher horsepower and greater weight tend to have lower miles per gallon, reflecting the energy costs of more powerful and heavier engines. Additionally, cars with fewer cylinders are generally more fuel efficient. Transmission type also plays a role, with manual transmissions showing a modest advantage in fuel economy for cars of similar weight.
+
+

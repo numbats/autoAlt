@@ -1,0 +1,16 @@
+Package: autoalt
+Type: Package
+Title: Automatic Alt-text generation
+Version: 0.1.0
+Author: Maliny Po
+Maintainer: The package maintainer <malinypo12@gmail.com>
+Description: A test package for alt-text generation
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: knitr,
+         stringr,
+         tidyverse,
+         ellmer,
+         usethis
+RoxygenNote: 7.3.1

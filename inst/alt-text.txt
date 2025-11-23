@@ -1,0 +1,12 @@
+Chunk label: fig-horsepower
+Alt-text: Scatterplot with miles per gallon on the y-axis and horsepower on the x-axis, displaying a clear negative correlation; as horsepower increases, miles per gallon decreases, indicating that cars with more powerful engines typically have lower fuel efficiency within the dataset.
+Usage: BrailleR, Cummulated cost: 0.001, Cummulated token usage: 434
+
+Chunk label: fig-cylinders
+Alt-text: Boxplot comparing miles per gallon across cars grouped by number of cylinders, showing that 4-cylinder cars have the highest fuel efficiency, 6-cylinder cars are intermediate, and 8-cylinder cars have the lowest mpg, demonstrating that increasing engine size corresponds to reduced fuel efficiency.
+Usage: BrailleR, Cummulated cost: 0.003, Cummulated token usage: 1158
+
+Chunk label: fig-weight-MPG
+Alt-text: Scatterplot displaying car weight on the x-axis and miles per gallon on the y-axis, with points distinguished by transmission type (automatic or manual). The plot shows that as weight increases, mpg decreases, and manual transmission cars generally achieve higher fuel efficiency than automatics, especially for cars of moderate weight.
+Usage: BrailleR, Cummulated cost: 0.005, Cummulated token usage: 2174
+

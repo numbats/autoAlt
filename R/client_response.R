@@ -5,7 +5,7 @@
 #' @param user_instruct Character string (optional). Additional user instructions to refine the style or content of the alt-text; to be appended the default system prompt.
 #' @import glue
 
-generate_alt_text <- function(file_path = NULL, openai_model = "gpt-5.1", api = NULL, user_instruct = ""){
+generate_alt_text <- function(file_path = NULL, outfile = NULL, openai_model = "gpt-5.1", api = NULL, user_instruct = ""){
 
   if (is.null(file_path)){
     stop("Missing file path.")
@@ -40,8 +40,8 @@ generate_alt_text <- function(file_path = NULL, openai_model = "gpt-5.1", api = 
   ) |>
     paste(collapse = "\n\n\n")
 
-  writeLines(alt_text, "alt-text.txt")
-  message("Output saved to alt-text.txt")
+  writeLines(alt_text, outfile)
+  message(print(paste("Output saved to ", outfile)))
 
 
 }

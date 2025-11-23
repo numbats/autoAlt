@@ -11,6 +11,11 @@ generate_alt_text <- function(file_path = NULL, outfile = NULL, openai_model = "
     stop("Missing file path.")
   }
 
+  if (is.null(outfile)){
+    outfile = "alt-text.txt"
+    warning("Writing to alt-text.txt")
+  }
+
   if (is.null(api)){
     stop("Missing OpenAI API key. Information on how to obtain an API key can be found here: https://help.openai.com/en/collections/3675931-api")
   }
@@ -20,7 +25,7 @@ generate_alt_text <- function(file_path = NULL, outfile = NULL, openai_model = "
   }
 
 
-  content <- extract_ggplot_code(file_path)
+  content <- extract_ggplot_code(flnm)
 
   body_list <- list(
     model = openai_model,

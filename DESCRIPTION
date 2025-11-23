@@ -15,3 +15,6 @@ Imports: knitr,
          ellmer,
          usethis
 RoxygenNote: 7.3.3
+Suggests: 
+    rmarkdown
+VignetteBuilder: knitr

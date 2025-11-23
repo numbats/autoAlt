@@ -1,6 +1,6 @@
 Package: autoalt
 Type: Package
-Title: Automatic Alt-text generation
+Title: Automatic alt text generation
 Version: 0.1.0
 Authors@R: 
     c(person(given = "Maliny",
@@ -29,8 +29,7 @@ Authors@R:
              role = c("aut"),
              comment = c(ORCID = "0000-0002-8129-8835"))  
              )
-Maintainer: The package maintainer <malinypo12@gmail.com>
-Description: A test package for alt-text generation
+Description: Alt text is important for accessibility of data visualisatons in reports, web sites, academic articles. It can be laborious to write. Here the alt text is written with the help of AI. The user provides a qmd or Rmd file, and it will be auto-processed to extract the ggplot2 code and data plots which will be passed to AI to write the alt text. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

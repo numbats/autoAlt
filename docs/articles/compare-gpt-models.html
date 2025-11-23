@@ -79,7 +79,21 @@ outputs</h1>
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">autoalt</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">autoalt</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     filter, lag</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
+<span></span>
+<span><span class="co"># Built-in datasets from ggplot2 and base R</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"economics"</span>, package <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"airquality"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -117,6 +131,45 @@ ozone concentration across the warmer months.</li>
 <strong>Temperature distributions by month</strong>: overlapping
 density curves comparing daily maximum temperatures by month.</li>
 </ul>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">economics</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">unemploy</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Total Number of Unemployed Persons in the US Over Time"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Year"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Number of Unemployed (thousands)"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="compare-gpt-models_files/figure-html/fig-unemployment-1.png" class="r-plt" width="700"></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">airquality</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span></span>
+<span>    mean_ozone <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">Ozone</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    .groups <span class="op">=</span> <span class="st">"drop"</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">mean_ozone</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Average Ozone Levels by Month in New York"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Month (May–September)"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Mean Ozone (ppb)"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="compare-gpt-models_files/figure-html/fig-ozone-month-1.png" class="r-plt" width="700"></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">airquality</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">Temp</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Temp</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Distribution of Daily Temperatures by Month in New York"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Daily Maximum Temperature (°F)"</span>,</span>
+<span>    fill <span class="op">=</span> <span class="st">"Month"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="compare-gpt-models_files/figure-html/fig-temp-density-1.png" class="r-plt" width="700"></p>
 <p>Each figure has an accompanying caption describing the main message
 in plain language. The package reads this Quarto file, locates the
 labelled figures, and then asks the model to produce:</p>
@@ -164,6 +217,59 @@ mental picture.</li>
 <p>Overall, GPT-5.1 behaves like a cautious, very thorough describer.
 The trade-off is that the alt-text is relatively long and sometimes
 borders on repeating the caption content in narrative form.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># # Chunk label: fig-unemployment --------------------</span></span>
+<span><span class="co"># ## Alt-text: A single time-series line graph shows the number of unemployed persons in the United States by month over several decades. The horizontal axis displays time in months and years, running from the mid-20th century to the early 21st century (approximate range, as exact years are not specified), while the vertical axis shows the count of unemployed people, increasing from low to high values (exact numerical scale is not visible). A single line, likely drawn in a solid colour, tracks unemployment over time. The line exhibits clear cyclical waves: unemployment rises sharply to pronounced peaks during economic downturns, then falls back to marked troughs in stronger labour market periods. Some peaks remain elevated for longer stretches, indicating prolonged recessions, whereas other periods show lower, relatively stable unemployment, signalling healthier employment conditions. No individual points, colours by group, or facets are indicated; the emphasis is on the overall pattern of repeated rises and falls over the decades.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Assumptions: The exact start and end years and the precise numeric range on the unemployment axis are not provided; they are assumed to cover several post-war decades with a vertical scale sufficient to show major cyclical swings. The line is assumed to be a single solid colour with no additional encodings such as markers or confidence bands.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Checklist:</span></span>
+<span><span class="co"># 1. Identified chart type. YES</span></span>
+<span><span class="co"># 2. Named axes and variables. YES</span></span>
+<span><span class="co"># 3. Mentioned approximate ranges or scales (where meaningful). YES</span></span>
+<span><span class="co"># 4. Described data mappings (e.g. colour/shape/size/facets). YES</span></span>
+<span><span class="co"># 5. Described main patterns, trends, or clusters. YES</span></span>
+<span><span class="co"># 6. Explicitly noted any assumptions. YES</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># ## Caption (for reference): @fig-unemployment shows monthly counts of unemployed persons in the United States over several decades. The time-series line reveals pronounced cyclical behaviour, with distinct peaks during economic downturns and troughs in stronger labour market periods. Longer stretches of elevated unemployment highlight prolonged recessions, while periods with lower, more stable values suggest relatively healthy employment conditions.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># ## Usage: BrailleR, Cummulated cost: NA, Cummulated token usage: 0</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># # Chunk label: fig-ozone-month --------------------</span></span>
+<span><span class="co"># ## Alt-text: A vertical bar chart displays average ozone concentration by month across the warmer part of the year. The horizontal axis lists months from late spring through summer into early autumn (for example, May to September), while the vertical axis shows mean ozone level on a continuous scale (exact units and numeric range are not specified but increase from low at the bottom to high at the top). Each month is represented by a single bar of uniform colour and width, with no additional colour groups, shapes, or facets. Bar heights rise from late spring into midsummer, where one or two central months have the tallest bars, then decline again toward the end of the season. This forms an approximate arch-shaped pattern, indicating that average ozone pollution is lowest at the cooler edges of the warm season and highest in the hottest, sunniest months.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Assumptions: The exact months (e.g., May–September), the units of ozone concentration, and the specific vertical scale are not provided and are inferred from the description. Bars are assumed to be a single solid colour with no error bars or additional encodings.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Checklist:</span></span>
+<span><span class="co"># 1. Identified chart type. YES</span></span>
+<span><span class="co"># 2. Named axes and variables. YES</span></span>
+<span><span class="co"># 3. Mentioned approximate ranges or scales (where meaningful). YES</span></span>
+<span><span class="co"># 4. Described data mappings (e.g. colour/shape/size/facets). YES</span></span>
+<span><span class="co"># 5. Described main patterns, trends, or clusters. YES</span></span>
+<span><span class="co"># 6. Explicitly noted any assumptions. YES</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># ## Caption (for reference): The bar chart in @fig-ozone-month summarises average ozone concentration across the warmer months. Ozone levels tend to rise from late spring into midsummer, reaching higher mean values in the middle of the season before dropping back again. This pattern suggests that ozone pollution intensifies during hotter months, consistent with the role of sunlight and temperature in ozone formation.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># ## Usage: BrailleR, Cummulated cost: NA, Cummulated token usage: 0</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># # Chunk label: fig-temp-density --------------------</span></span>
+<span><span class="co"># ## Alt-text: An overlapping density plot compares the distributions of daily maximum temperatures across months. The horizontal axis shows temperature, increasing from cooler to hotter values (exact scale not specified), and the vertical axis shows density, indicating the relative frequency of temperatures rather than counts. Each month is represented by a smooth coloured curve; multiple curves overlap on the same axes, with colour distinguishing months and no use of different shapes, sizes, or facets. Curves for early-season months are concentrated toward lower temperatures, forming peaks at cooler values. Midsummer months have density curves shifted to higher temperatures with broader spreads, indicating both hotter and more variable daily maximums. By late summer, the curves move slightly back toward cooler temperatures, suggesting a gradual easing of the peak heat period.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Assumptions: Specific temperature units (e.g., degrees Celsius or Fahrenheit), the exact numeric range on the temperature axis, and the exact set of months included are not provided and are inferred from context. The curves are assumed to be smooth lines with distinct colours and no transparency or additional annotations.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Checklist:</span></span>
+<span><span class="co"># 1. Identified chart type. YES</span></span>
+<span><span class="co"># 2. Named axes and variables. YES</span></span>
+<span><span class="co"># 3. Mentioned approximate ranges or scales (where meaningful). YES</span></span>
+<span><span class="co"># 4. Described data mappings (e.g. colour/shape/size/facets). YES</span></span>
+<span><span class="co"># 5. Described main patterns, trends, or clusters. YES</span></span>
+<span><span class="co"># 6. Explicitly noted any assumptions. YES</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># ## Caption (for reference): @fig-temp-density compares the distributions of daily maximum temperatures across months using overlapping density curves. Early-season months show distributions concentrated at cooler temperatures, while midsummer months shift towards higher values and broader spreads. By late summer, the densities start to shift back slightly towards cooler conditions, reflecting the gradual transition out of peak heat.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># ## Usage: BrailleR, Cummulated cost: NA, Cummulated token usage: 1408</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="what-gpt4-1-produces">What GPT4.1 produces<a class="anchor" aria-label="anchor" href="#what-gpt4-1-produces"></a>
@@ -191,6 +297,59 @@ colours are not specified).</li>
 </ul>
 <p>Overall, GPT-4.1 manages to cover the same conceptual ground as
 GPT-5.1, but with tighter prose and fewer digressions.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># # Chunk label: fig-unemployment --------------------</span></span>
+<span><span class="co"># ## Alt-text: A time-series line graph displays monthly counts of unemployed persons in the United States over several decades, with time on the x-axis (spanning multiple years or decades) and the number of unemployed people on the y-axis (exact scale unspecified but representing headcount). The line shows pronounced cycles, with sharp peaks corresponding to economic recessions and lower, flatter periods during stronger labor markets. Extended intervals of high unemployment indicate prolonged recessions, while lower, steady values suggest healthier employment periods.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Assumptions: The precise axis ranges and any specific color or style mappings are not specified in the prompt or supporting materials; these are inferred from the context.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Checklist:</span></span>
+<span><span class="co"># 1. Identified chart type. YES</span></span>
+<span><span class="co"># 2. Named axes and variables. YES</span></span>
+<span><span class="co"># 3. Mentioned approximate ranges or scales (where meaningful). YES (noted ranges are over time and unemployment headcounts; specifics are unspecified)</span></span>
+<span><span class="co"># 4. Described data mappings (e.g. colour/shape/size/facets). YES (noted as a line graph; no additional visual mappings specified)</span></span>
+<span><span class="co"># 5. Described main patterns, trends, or clusters. YES</span></span>
+<span><span class="co"># 6. Explicitly noted any assumptions. YES</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># ## Caption (for reference): @fig-unemployment shows monthly counts of unemployed persons in the United States over several decades. The time-series line reveals pronounced cyclical behaviour, with distinct peaks during economic downturns and troughs in stronger labour market periods. Longer stretches of elevated unemployment highlight prolonged recessions, while periods with lower, more stable values suggest relatively healthy employment conditions.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># ## Usage: BrailleR, Cummulated cost: 0.003, Cummulated token usage: 0</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># # Chunk label: fig-ozone-month --------------------</span></span>
+<span><span class="co"># ## Alt-text: A bar chart shows the average ozone concentration for each of the warmer months, with months on the x-axis and mean ozone concentration on the y-axis (exact scale unspecified). Bars increase in height from late spring, peak during midsummer, and then decrease toward the end of the season. This pattern indicates that ozone pollution intensifies in hotter months and diminishes as temperatures fall, reflecting the influence of sunlight and temperature on ozone formation.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Assumptions: Exact month names, y-axis values, and any color or stylistic enhancements are not specified in the provided information.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Checklist:</span></span>
+<span><span class="co"># 1. Identified chart type. YES</span></span>
+<span><span class="co"># 2. Named axes and variables. YES</span></span>
+<span><span class="co"># 3. Mentioned approximate ranges or scales (where meaningful). YES (noted as per month and concentration, but exact values unspecified)</span></span>
+<span><span class="co"># 4. Described data mappings (e.g. colour/shape/size/facets). YES (bars mapped by month; no mention of color or facets)</span></span>
+<span><span class="co"># 5. Described main patterns, trends, or clusters. YES</span></span>
+<span><span class="co"># 6. Explicitly noted any assumptions. YES</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># ## Caption (for reference): The bar chart in @fig-ozone-month summarises average ozone concentration across the warmer months. Ozone levels tend to rise from late spring into midsummer, reaching higher mean values in the middle of the season before dropping back again. This pattern suggests that ozone pollution intensifies during hotter months, consistent with the role of sunlight and temperature in ozone formation.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># ## Usage: BrailleR, Cummulated cost: 0.008, Cummulated token usage: 0</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># # Chunk label: fig-temp-density --------------------</span></span>
+<span><span class="co"># ## Alt-text: A density plot displays overlapping curves representing the distributions of daily maximum temperatures for each month, with temperature on the x-axis (exact range not specified) and density on the y-axis. Curves for early-season months peak at lower temperatures and have narrower spreads, midsummer curves shift toward higher temperatures and show broader distributions, and late summer curves begin to move back toward cooler temperatures. This pattern indicates a clear seasonal trend, with the warmest and most variable temperatures occurring during midsummer.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Assumptions: The specific temperature ranges and month labels, as well as the use of color or style to distinguish months, are not detailed in the prompt.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Checklist:</span></span>
+<span><span class="co"># 1. Identified chart type. YES</span></span>
+<span><span class="co"># 2. Named axes and variables. YES</span></span>
+<span><span class="co"># 3. Mentioned approximate ranges or scales (where meaningful). YES</span></span>
+<span><span class="co"># 4. Described data mappings (e.g. colour/shape/size/facets). YES (noted as overlapping curves representing months)</span></span>
+<span><span class="co"># 5. Described main patterns, trends, or clusters. YES</span></span>
+<span><span class="co"># 6. Explicitly noted any assumptions. YES</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># ## Caption (for reference): @fig-temp-density compares the distributions of daily maximum temperatures across months using overlapping density curves. Early-season months show distributions concentrated at cooler temperatures, while midsummer months shift towards higher values and broader spreads. By late summer, the densities start to shift back slightly towards cooler conditions, reflecting the gradual transition out of peak heat.</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># ## Usage: BrailleR, Cummulated cost: 0.014, Cummulated token usage: 0</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">

@@ -2,7 +2,7 @@
 #' @param file_path Path to the QMD/RMD file
 #' @param api API key
 #' @param userinstruct Optional user instruction. This will be appended to the system prompt.
-generate_alt_text <- function(file_path = NULL,api = NULL, userinstruct = ""){
+generate_alt_text <- function(file_path = NULL, api = NULL, userinstruct = ""){
 
   if (is.null(file_path)){
     stop("Missing file path")
@@ -48,12 +48,12 @@ generate_alt_text <- function(file_path = NULL,api = NULL, userinstruct = ""){
 #' @param content Parsed content
 client_responses <- function(body_list , content){
 
-  sysprompt <- "You are a researcher tasked with generating one concise variations of alt-text for graphs based on R code, BrailleR output and reference text. Your role involves analyzing textual descriptions (such as BrailleR output), statistical summaries, and context from the reference text to produce clear and informative alt-text. You should naturally describe the chart type, variables on the axes, axis ranges, data mappings (such as color or shape), and any patterns, relationships, or clusters. Include your interpretation of the data where relevant. Do not begin alt-text with phrases like 'Alt-text:' or use labels such as 'Iteration.' If the prompt lacks detail, make reasonable assumptions and note them. Don't provide seperate interpreation for provided R code, reference text or brailleR output."
+  sysprompt <- "You are a researcher tasked with generating one concise variations of alt-text for graphs based on R code, BrailleR output and reference text. Your role involves analyzing textual descriptions (such as BrailleR output), statistical summaries, and context from the reference text to produce clear and informative alt-text. You should naturally describe the chart type, variables on the axes, axis ranges, data mappings (such as color or shape), and any patterns, relationships, or clusters. Include your interpretation of the data where relevant. Do not begin alt-text with phrases like 'Alt-text:' or use labels such as 'Iteration.' If the prompt lacks detail, make reasonable assumptions and note them. Don't provide separate interpretation for provided R code, reference text or BrailleR output."
 
   chat <- ellmer::chat_openai(
     model = body_list$model,
     api_key = body_list$api_key,
-    system_prompt = paste0(body_list$userinstruct,sysprompt)
+    system_prompt = paste(body_list$userinstruct, sysprompt)
   )
 
 

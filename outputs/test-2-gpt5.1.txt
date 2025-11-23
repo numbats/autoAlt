@@ -1,0 +1,52 @@
+# Chunk label: fig-unemployment --------------------
+## Alt-text: A single time-series line graph shows the number of unemployed persons in the United States by month over several decades. The horizontal axis displays time in months and years, running from the mid-20th century to the early 21st century (approximate range, as exact years are not specified), while the vertical axis shows the count of unemployed people, increasing from low to high values (exact numerical scale is not visible). A single line, likely drawn in a solid colour, tracks unemployment over time. The line exhibits clear cyclical waves: unemployment rises sharply to pronounced peaks during economic downturns, then falls back to marked troughs in stronger labour market periods. Some peaks remain elevated for longer stretches, indicating prolonged recessions, whereas other periods show lower, relatively stable unemployment, signalling healthier employment conditions. No individual points, colours by group, or facets are indicated; the emphasis is on the overall pattern of repeated rises and falls over the decades.
+
+Assumptions: The exact start and end years and the precise numeric range on the unemployment axis are not provided; they are assumed to cover several post-war decades with a vertical scale sufficient to show major cyclical swings. The line is assumed to be a single solid colour with no additional encodings such as markers or confidence bands.
+
+Checklist:
+1. Identified chart type. YES
+2. Named axes and variables. YES
+3. Mentioned approximate ranges or scales (where meaningful). YES
+4. Described data mappings (e.g. colour/shape/size/facets). YES
+5. Described main patterns, trends, or clusters. YES
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): @fig-unemployment shows monthly counts of unemployed persons in the United States over several decades. The time-series line reveals pronounced cyclical behaviour, with distinct peaks during economic downturns and troughs in stronger labour market periods. Longer stretches of elevated unemployment highlight prolonged recessions, while periods with lower, more stable values suggest relatively healthy employment conditions.
+
+## Usage: BrailleR, Cummulated cost: NA, Cummulated token usage: 0
+
+
+# Chunk label: fig-ozone-month --------------------
+## Alt-text: A vertical bar chart displays average ozone concentration by month across the warmer part of the year. The horizontal axis lists months from late spring through summer into early autumn (for example, May to September), while the vertical axis shows mean ozone level on a continuous scale (exact units and numeric range are not specified but increase from low at the bottom to high at the top). Each month is represented by a single bar of uniform colour and width, with no additional colour groups, shapes, or facets. Bar heights rise from late spring into midsummer, where one or two central months have the tallest bars, then decline again toward the end of the season. This forms an approximate arch-shaped pattern, indicating that average ozone pollution is lowest at the cooler edges of the warm season and highest in the hottest, sunniest months.
+
+Assumptions: The exact months (e.g., May–September), the units of ozone concentration, and the specific vertical scale are not provided and are inferred from the description. Bars are assumed to be a single solid colour with no error bars or additional encodings.
+
+Checklist:
+1. Identified chart type. YES
+2. Named axes and variables. YES
+3. Mentioned approximate ranges or scales (where meaningful). YES
+4. Described data mappings (e.g. colour/shape/size/facets). YES
+5. Described main patterns, trends, or clusters. YES
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): The bar chart in @fig-ozone-month summarises average ozone concentration across the warmer months. Ozone levels tend to rise from late spring into midsummer, reaching higher mean values in the middle of the season before dropping back again. This pattern suggests that ozone pollution intensifies during hotter months, consistent with the role of sunlight and temperature in ozone formation.
+
+## Usage: BrailleR, Cummulated cost: NA, Cummulated token usage: 0
+
+
+# Chunk label: fig-temp-density --------------------
+## Alt-text: An overlapping density plot compares the distributions of daily maximum temperatures across months. The horizontal axis shows temperature, increasing from cooler to hotter values (exact scale not specified), and the vertical axis shows density, indicating the relative frequency of temperatures rather than counts. Each month is represented by a smooth coloured curve; multiple curves overlap on the same axes, with colour distinguishing months and no use of different shapes, sizes, or facets. Curves for early-season months are concentrated toward lower temperatures, forming peaks at cooler values. Midsummer months have density curves shifted to higher temperatures with broader spreads, indicating both hotter and more variable daily maximums. By late summer, the curves move slightly back toward cooler temperatures, suggesting a gradual easing of the peak heat period.
+
+Assumptions: Specific temperature units (e.g., degrees Celsius or Fahrenheit), the exact numeric range on the temperature axis, and the exact set of months included are not provided and are inferred from context. The curves are assumed to be smooth lines with distinct colours and no transparency or additional annotations.
+
+Checklist:
+1. Identified chart type. YES
+2. Named axes and variables. YES
+3. Mentioned approximate ranges or scales (where meaningful). YES
+4. Described data mappings (e.g. colour/shape/size/facets). YES
+5. Described main patterns, trends, or clusters. YES
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): @fig-temp-density compares the distributions of daily maximum temperatures across months using overlapping density curves. Early-season months show distributions concentrated at cooler temperatures, while midsummer months shift towards higher values and broader spreads. By late summer, the densities start to shift back slightly towards cooler conditions, reflecting the gradual transition out of peak heat.
+
+## Usage: BrailleR, Cummulated cost: NA, Cummulated token usage: 1408

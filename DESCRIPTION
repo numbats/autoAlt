@@ -2,7 +2,33 @@ Package: autoalt
 Type: Package
 Title: Automatic Alt-text generation
 Version: 0.1.0
-Author: Maliny Po
+Authors@R: 
+    c(person(given = "Maliny",
+             family = "Po",
+             role = c("aut", "cre"),
+             email = "malinypo12@gmail.com",
+             comment = c(ORCID = "0009-0008-4686-6631")),
+      person(given = "Dianne",
+             family = "Cook",
+             role = "aut",
+             email = "dicook@monash.edu",
+             comment = c(ORCID = "0000-0002-3813-7155")),
+      person(given = "Jakob",
+             family = "Voo",
+             role = "aut",
+             email = "jakob.voo@act.gov.au",
+             comment = c(ORCID = "0009-0009-2944-723X")),
+      person(given = "Heather",
+             family = "Turner",
+             role = "aut",
+             email = "ht@heatherturner.net",
+             comment = c(ORCID = "0000-0002-1256-3375")),
+      person(given = "A. Jonathan R.", 
+             family = "Godfrey", 
+             email ="a.j.godfrey@massey.ac.nz", 
+             role = c("aut"),
+             comment = c(ORCID = "0000-0002-8129-8835"))  
+             )
 Maintainer: The package maintainer <malinypo12@gmail.com>
 Description: A test package for alt-text generation
 License: MIT + file LICENSE

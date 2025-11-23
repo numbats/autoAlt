@@ -1,0 +1,81 @@
+---
+title: "Sample Economic and Environmental Report"
+author: "Chat-GPT"
+date: "2025-09-10"
+format: pdf
+---
+
+```{r setup}
+library(ggplot2)
+library(dplyr)
+
+# Built-in datasets from ggplot2 and base R
+data("economics", package = "ggplot2")
+data("airquality")
+```
+
+# Introduction
+
+This report explores two publicly available datasets: economics from the ggplot2 package and the classic airquality dataset from base R. The economics dataset provides monthly time-series data on the US economy, including variables such as unemployment and personal consumption expenditure. The airquality dataset records daily air quality measurements in New York, including ozone concentration, solar radiation, and temperature.
+
+We use a selection of visualisations to highlight long-term economic trends and seasonal patterns in air quality.
+
+# Unemployment Over Time
+
+```{r}
+#| label: fig-unemployment
+economics |>
+  ggplot(aes(x = date, y = unemploy)) +
+  geom_line(linewidth = 0.6) +
+  labs(
+    title = "Total Number of Unemployed Persons in the US Over Time",
+    x = "Year",
+    y = "Number of Unemployed (thousands)"
+  ) +
+  theme_minimal()
+
+```
+
+@fig-unemployment shows monthly counts of unemployed persons in the United States over several decades. The time-series line reveals pronounced cyclical behaviour, with distinct peaks during economic downturns and troughs in stronger labour market periods. Longer stretches of elevated unemployment highlight prolonged recessions, while periods with lower, more stable values suggest relatively healthy employment conditions.
+
+# Average Ozone by Month
+
+```{r fig-cylinders}
+#| label: fig-ozone-month
+airquality |>
+  group_by(Month) |>
+  summarise(
+    mean_ozone = mean(Ozone, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  ggplot(aes(x = factor(Month), y = mean_ozone)) +
+  geom_col() +
+  labs(
+    title = "Average Ozone Levels by Month in New York",
+    x = "Month (May–September)",
+    y = "Mean Ozone (ppb)"
+  ) +
+  theme_minimal()
+
+```
+
+The bar chart in @fig-ozone-month summarises average ozone concentration across the warmer months. Ozone levels tend to rise from late spring into midsummer, reaching higher mean values in the middle of the season before dropping back again. This pattern suggests that ozone pollution intensifies during hotter months, consistent with the role of sunlight and temperature in ozone formation.
+
+# Temperature Distributions by Month
+
+```{r}
+#| label: fig-temp-density
+airquality |>
+  filter(!is.na(Temp)) |>
+  ggplot(aes(x = Temp, fill = factor(Month))) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Distribution of Daily Temperatures by Month in New York",
+    x = "Daily Maximum Temperature (°F)",
+    fill = "Month"
+  ) +
+  theme_minimal()
+
+```
+
+@fig-temp-density compares the distributions of daily maximum temperatures across months using overlapping density curves. Early-season months show distributions concentrated at cooler temperatures, while midsummer months shift towards higher values and broader spreads. By late summer, the densities start to shift back slightly towards cooler conditions, reflecting the gradual transition out of peak heat.

@@ -1,8 +1,6 @@
-# autoAlt
+# autoAlt <a href="https://numbats.github.io/autoAlt/"><img src="man/figures/autoAlt-logo.png" align="right" height="138" /></a>
 
 autoAlt is a demo R package for automatically generating alt-text from QMD and RMD files. It includes the `generate_alt_text()` function, which uses Ellmer and BrailleR to create alt-text for plots in your documents.
-
-Disclaimer: This package is in early development. Currently, it only works with QMD and RMD files where all code chunks are contained within a single document. It does not support workflows where code is stored in a separate R script.
 
 # Install
 
@@ -11,6 +9,8 @@ You can install the development version from GitHub:
 ```
 remotes::install_github("numbats/autoAlt")
 ```
+
+It depends on having [BrailleR](https://github.com/ajrgodfrey/BrailleR) which needs to be installed from GitHub.
 
 # Usage
 
@@ -28,6 +28,9 @@ In cases where the example is not self-contained, OpenAI's code interpreter is u
 
 ![](file/alt_text.png)
 
+# Contribute
+
+Disclaimer: This package is in early development. Currently, it only works with QMD and RMD files where all code chunks are contained within a single document. It does not support workflows where code is stored in a separate R script.
 
 
 

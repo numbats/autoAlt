@@ -1,12 +1,14 @@
-#' Function to generate alt-text
-#' @param flnm Path and name of the QMD/RMD file
-#' @param api API key
-#' @param outfile Path and name of file to write to
-#' @param userinstruct Optional user instruction. This will be appended to the system prompt.
-generate_alt_text <- function(flnm = NULL, outfile = NULL, api = NULL, userinstruct = ""){
+#' Function to generate alt-text for data visualisations in a Quarto or R Markdown file
+#' @param file_path Character string. Path to the QMD or RMD file containing the plots.
+#' @param openai_model Character string. Name of the OpenAI model used to generate alt-text.
+#' @param api Character string. OpenAI API key used for authentication.
+#' @param user_instruct Character string (optional). Additional user instructions to refine the style or content of the alt-text; to be appended the default system prompt.
+#' @import glue
 
-  if (is.null(flnm)){
-    stop("Missing file path")
+generate_alt_text <- function(file_path = NULL, outfile = NULL, openai_model = "gpt-5.1", api = NULL, user_instruct = ""){
+
+  if (is.null(file_path)){
+    stop("Missing file path.")
   }
 
   if (is.null(outfile)){
@@ -15,36 +17,36 @@ generate_alt_text <- function(flnm = NULL, outfile = NULL, api = NULL, userinstr
   }
 
   if (is.null(api)){
-    stop("Missing Open-AI API key. Information on how to obtain an API key can be found here https://help.openai.com/en/collections/3675931-api")
+    stop("Missing OpenAI API key. Information on how to obtain an API key can be found here: https://help.openai.com/en/collections/3675931-api")
   }
 
   if (!is.character(api)) {
-    stop("API needs to be in a character string.  Information on how to obtain an API key can be found here https://help.openai.com/en/collections/3675931-api")
+    stop("API key needs to be in a character string. Information on how to obtain an API key can be found here: https://help.openai.com/en/collections/3675931-api")
   }
 
 
   content <- extract_ggplot_code(flnm)
 
   body_list <- list(
-    model = "gpt-4.1",
+    model = openai_model,
     api_key = api,
-    userinstruct = userinstruct,
+    user_instruct = user_instruct,
     max_token = 2048
   )
 
 
   result <- client_responses(body_list , content)
 
-  alt_text <- paste(
-    "Chunk label: ", result$chunk_label,
-    "\nAlt-text: ", result$response,
-    "\nUsage: ", result$usage,
-    "\n",
-    sep = "", collapse = "\n"
-  )
+  alt_text <- glue::glue(
+    "# Chunk label: {result$chunk_label} --------------------",
+    "\n## Alt-text: {result$response}",
+    "\n\n## Caption (for reference): {result$reference_paragraph}",
+    "\n\n## Usage: {result$usage}",
+  ) |>
+    paste(collapse = "\n\n\n")
 
   writeLines(alt_text, outfile)
-  print(paste("Output saved to ", outfile))
+  message(print(paste("Output saved to ", outfile)))
 
 
 }
@@ -54,18 +56,45 @@ generate_alt_text <- function(flnm = NULL, outfile = NULL, api = NULL, userinstr
 #' @param content Parsed content
 client_responses <- function(body_list , content){
 
-  sysprompt <- "You are a researcher tasked with generating one concise variations of alt-text for graphs based on R code, BrailleR output and reference text. Your role involves analyzing textual descriptions (such as BrailleR output), statistical summaries, and context from the reference text to produce clear and informative alt-text. You should naturally describe the chart type, variables on the axes, axis ranges, data mappings (such as color or shape), and any patterns, relationships, or clusters. Include your interpretation of the data where relevant. Do not begin alt-text with phrases like 'Alt-text:' or use labels such as 'Iteration.' If the prompt lacks detail, make reasonable assumptions and note them. Don't provide seperate interpreation for provided R code, reference text or brailleR output."
+  sys_prompt <- "You are a researcher tasked with generating one concise version of alt-text for a graph, based on R code, BrailleR output, and reference text.
+
+Your role is to analyse the available information (R code, BrailleR output, statistical summaries, and reference text) and produce clear, informative alt-text that:
+
+- Naturally describes:
+  - the chart type
+  - the variables on each axis
+  - approximate axis ranges
+  - how data are mapped to visual elements (e.g. colour, shape, size, facets)
+  - any visible patterns, relationships, clusters, trends, or notable outliers
+- Includes brief interpretation of the data where this is relevant to understanding the plot.
+- Avoids starting with phrases such as “Alt-text:” and does not use labels like “Iteration”.
+
+If the prompt lacks detail, make reasonable assumptions. Clearly flag these assumptions in a short note after the alt-text.
+
+After you have written the alt-text, generate a short checklist confirming whether you have covered the following items for this specific graph:
+
+1. Identified chart type.
+2. Named axes and variables.
+3. Mentioned approximate ranges or scales (where meaningful).
+4. Described data mappings (e.g. colour/shape/size/facets).
+5. Described main patterns, trends, or clusters.
+6. Explicitly noted any assumptions.
+
+For each checklist item, respond with “YES” or “NO”.
+
+Do not provide separate explanations or interpretations of the R code, reference text, or BrailleR output. Use them only as sources to inform the single piece of alt-text and the checklist."
 
   chat <- ellmer::chat_openai(
     model = body_list$model,
-    api_key = body_list$api_key,
-    system_prompt = paste0(body_list$userinstruct,sysprompt)
+    api_key = body_list$api_key, #TODO [api_key] arg is now deprecated in chat_openai(). To be refactored to [credentials] arg.
+    system_prompt = paste(body_list$user_instruct, sys_prompt)
   )
 
 
   output <- data.frame(
     chunk_label = character(0),
     response = character(0),
+    reference_paragraph = character(0),
     usage = character(0)
   )
 
@@ -119,14 +148,19 @@ client_responses <- function(body_list , content){
     }
 
     # HTTP request
-    print(paste0("Evaluating ", content[[i]]$chunk_label, "..."))
-    response <- chat$chat(paste0(sysprompt, client_input, reference_text))
+    message(paste0("Evaluating ", content[[i]]$chunk_label, "..."))
+    response <- chat$chat(paste0(sys_prompt, client_input, reference_text))
     usage <- paste0("BrailleR",
                     ", Cummulated cost: ", round(chat$get_cost()[1], 3),
                     ", Cummulated token usage: ", sum(chat$get_tokens()[3])[1]
     )
 
-    output[nrow(output) + 1,] <-  list(content[[i]]$chunk_label, response,usage)
+    output[nrow(output) + 1, ] <- list(
+      content[[i]]$chunk_label,
+      response,
+      content[[i]]$reference_paragraph,
+      usage
+    )
 
 
   }

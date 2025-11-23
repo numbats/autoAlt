@@ -88,11 +88,15 @@ data visualisations from a Quarto document, and compares the quality of
 alt-text outputs from two different OpenAI models: GPT-4.1 and
 GPT-5.1.</p>
 <p>We use a small “economic and environmental” report as a worked
-example. The Quarto document includes three figures: - A time-series of
-US unemployment (<code>fig-unemployment</code>). - A bar chart of
-average ozone by month (<code>fig-ozone-month</code>). - A set of
-density curves for temperature by month
-(<code>fig-temp-density</code>)</p>
+example. The Quarto document includes three figures:</p>
+<ul>
+<li>A time-series of US unemployment
+(<code>fig-unemployment</code>).</li>
+<li>A bar chart of average ozone by month
+(<code>fig-ozone-month</code>).</li>
+<li>A set of density curves for temperature by month
+(<code>fig-temp-density</code>)</li>
+</ul>
 <p>The goal is not to “prove” one model is universally better, but to
 show how they behave in this specific alt-text task and to justify a
 sensible default choice.</p>
@@ -101,18 +105,28 @@ sensible default choice.</p>
 <h2 id="the-example-quarto-document">The example Quarto document<a class="anchor" aria-label="anchor" href="#the-example-quarto-document"></a>
 </h2>
 <p>The underlying Quarto file <code>test-2.qmd</code> contains three
-figures: - <em>Unemployment over time</em>: a single line chart showing
-monthly unemployment counts over several decades. - <em>Average ozone by
-month</em>: a column chart of mean ozone concentration across the warmer
-months. - <em>Temperature distributions by month</em>: overlapping
-density curves comparing daily maximum temperatures by month.</p>
+figures:</p>
+<ul>
+<li>
+<strong>Unemployment over time</strong>: a single line chart showing
+monthly unemployment counts over several decades.</li>
+<li>
+<strong>Average ozone by month</strong>: a column chart of mean
+ozone concentration across the warmer months.</li>
+<li>
+<strong>Temperature distributions by month</strong>: overlapping
+density curves comparing daily maximum temperatures by month.</li>
+</ul>
 <p>Each figure has an accompanying caption describing the main message
 in plain language. The package reads this Quarto file, locates the
-labelled figures, and then asks the model to produce: - A single block
-of alt-text. - A short checklist (inspired by <a href="https://numbats.github.io/alt-text-for-data-plots/" class="external-link">a separate
+labelled figures, and then asks the model to produce:</p>
+<ul>
+<li>A single block of alt-text.</li>
+<li>A short checklist (inspired by <a href="https://numbats.github.io/alt-text-for-data-plots/" class="external-link">a separate
 work</a>) confirming that the alt-text covers key ingredients (chart
 type, axes, scales, visual encodings, patterns, and explicit
-assumptions).</p>
+assumptions).</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="generating-alt-text-with-different-models">Generating alt-text with different models<a class="anchor" aria-label="anchor" href="#generating-alt-text-with-different-models"></a>
@@ -126,21 +140,27 @@ alt-text 6-item check list, and some metadata.</p>
 <div class="section level3">
 <h3 id="what-gpt5-1-produces">What GPT5.1 produces<a class="anchor" aria-label="anchor" href="#what-gpt5-1-produces"></a>
 </h3>
-<p>For all three figures, GPT5.1 generates alt-text that is: -
-<em>Detailed and expansive.</em> The descriptions tend to be long,
-unpacking the layout, axis directions, visual encodings, and visible
-patterns in multiple sentences. For example, the unemployment plot is
-described as a “single time-series line graph” with a careful
+<p>For all three figures, GPT5.1 generates alt-text that is:</p>
+<ul>
+<li>
+<strong>Detailed and expansive.</strong> The descriptions tend to be
+long, unpacking the layout, axis directions, visual encodings, and
+visible patterns in multiple sentences. For example, the unemployment
+plot is described as a “single time-series line graph” with a careful
 explanation of the axis roles, the cyclical “waves” in the line, and the
-absence of other encodings such as points or facets. - <em>Explicit
-about assumptions.</em> Each section ends with an “Assumptions”
-paragraph that spells out what is inferred (e.g. the exact date range,
-units, or colours when they are not stated in the prompt). -
-<em>Thorough about visual patterns.</em> GPT-5.1 spends time describing
-the shape of clusters and curves (for example, “arch-shaped” bar heights
-for ozone and “peaks at cooler values” for early-season temperature
-densities), so that a reader can build a fairly detailed mental
-picture.</p>
+absence of other encodings such as points or facets.</li>
+<li>
+<strong>Explicit about assumptions.</strong> Each section ends with
+an “Assumptions” paragraph that spells out what is inferred (e.g. the
+exact date range, units, or colours when they are not stated in the
+prompt).</li>
+<li>
+<strong>Thorough about visual patterns.</strong> GPT-5.1 spends time
+describing the shape of clusters and curves (for example, “arch-shaped”
+bar heights for ozone and “peaks at cooler values” for early-season
+temperature densities), so that a reader can build a fairly detailed
+mental picture.</li>
+</ul>
 <p>Overall, GPT-5.1 behaves like a cautious, very thorough describer.
 The trade-off is that the alt-text is relatively long and sometimes
 borders on repeating the caption content in narrative form.</p>
@@ -149,19 +169,26 @@ borders on repeating the caption content in narrative form.</p>
 <h3 id="what-gpt4-1-produces">What GPT4.1 produces<a class="anchor" aria-label="anchor" href="#what-gpt4-1-produces"></a>
 </h3>
 <p>On the same prompts, GPT-4.1 gives broadly similar content but in a
-noticeably more succinct style: - <em>Shorter descriptions.</em> The
-unemployment time-series, for instance, is summarised in a single
-paragraph that still names the chart type, axes, and the cyclical
-pattern in unemployment, but with fewer adjectival phrases and less
-repetition. - <em>Straight to the point.</em> For the ozone bar chart
-and temperature densities, GPT-4.1 gets quickly to the structure (“bar
+noticeably more succinct style:</p>
+<ul>
+<li>
+<strong>Shorter descriptions.</strong> The unemployment time-series,
+for instance, is summarised in a single paragraph that still names the
+chart type, axes, and the cyclical pattern in unemployment, but with
+fewer adjectival phrases and less repetition.</li>
+<li>
+<strong>Straight to the point.</strong> For the ozone bar chart and
+temperature densities, GPT-4.1 gets quickly to the structure (“bar
 chart”, “density plot with overlapping curves”) and the key pattern
 (higher ozone in midsummer; warmer, more variable temperatures in
-midsummer), without elaborating as much on non-essential layout details.
-- <em>Still explicit about assumptions.</em> Each block includes a short
-assumptions note that mirrors GPT-5.1’s behaviour but in fewer words
-(for example, acknowledging that exact axis ranges or colours are not
-specified).</p>
+midsummer), without elaborating as much on non-essential layout
+details.</li>
+<li>
+<strong>Still explicit about assumptions.</strong> Each block
+includes a short assumptions note that mirrors GPT-5.1’s behaviour but
+in fewer words (for example, acknowledging that exact axis ranges or
+colours are not specified).</li>
+</ul>
 <p>Overall, GPT-4.1 manages to cover the same conceptual ground as
 GPT-5.1, but with tighter prose and fewer digressions.</p>
 </div>
@@ -170,11 +197,15 @@ GPT-5.1, but with tighter prose and fewer digressions.</p>
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
 </h2>
 <p>For this test Quarto document, GPT-4.1 appears to be the better
-default choice: - It produces alt-text that is more succinct while still
-meeting all checklist criteria. - It avoids unnecessary repetition and
-long digressions that can make alt-text harder to consume via a screen
-reader. - It still provides explicit notes on assumptions, which is
-valuable for transparency.</p>
+default choice:</p>
+<ul>
+<li>It produces alt-text that is more succinct while still meeting all
+checklist criteria.</li>
+<li>It avoids unnecessary repetition and long digressions that can make
+alt-text harder to consume via a screen reader.</li>
+<li>It still provides explicit notes on assumptions, which is valuable
+for transparency.</li>
+</ul>
 <p>GPT-5.1 is still useful if you deliberately want very detailed
 descriptions (for instance, when training authors or debugging the
 alt-text generation process), but for everyday use and especially for

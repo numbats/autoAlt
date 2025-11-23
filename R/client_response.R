@@ -48,7 +48,33 @@ generate_alt_text <- function(file_path = NULL, api = NULL, userinstruct = ""){
 #' @param content Parsed content
 client_responses <- function(body_list , content){
 
-  sysprompt <- "You are a researcher tasked with generating one concise variations of alt-text for graphs based on R code, BrailleR output and reference text. Your role involves analyzing textual descriptions (such as BrailleR output), statistical summaries, and context from the reference text to produce clear and informative alt-text. You should naturally describe the chart type, variables on the axes, axis ranges, data mappings (such as color or shape), and any patterns, relationships, or clusters. Include your interpretation of the data where relevant. Do not begin alt-text with phrases like 'Alt-text:' or use labels such as 'Iteration.' If the prompt lacks detail, make reasonable assumptions and note them. Don't provide separate interpretation for provided R code, reference text or BrailleR output."
+  sysprompt <- "You are a researcher tasked with generating one concise version of alt-text for a graph, based on R code, BrailleR output, and reference text.
+
+Your role is to analyse the available information (R code, BrailleR output, statistical summaries, and reference text) and produce clear, informative alt-text that:
+
+- Naturally describes:
+  - the chart type
+  - the variables on each axis
+  - approximate axis ranges
+  - how data are mapped to visual elements (e.g. colour, shape, size, facets)
+  - any visible patterns, relationships, clusters, trends, or notable outliers
+- Includes brief interpretation of the data where this is relevant to understanding the plot.
+- Avoids starting with phrases such as “Alt-text:” and does not use labels like “Iteration”.
+
+If the prompt lacks detail, make reasonable assumptions. Clearly flag these assumptions in a short note after the alt-text.
+
+After you have written the alt-text, generate a short checklist confirming whether you have covered the following items for this specific graph:
+
+1. Chart type identified.
+2. Axes and variables clearly named.
+3. Approximate ranges or scales mentioned (where meaningful).
+4. Data mappings (e.g. colour/shape/size/facets) described.
+5. Main patterns, trends, or clusters described.
+6. Any assumptions explicitly noted.
+
+For each checklist item, respond with “Yes” or “No”.
+
+Do not provide separate explanations or interpretations of the R code, reference text, or BrailleR output. Use them only as sources to inform the single piece of alt-text and the checklist."
 
   chat <- ellmer::chat_openai(
     model = body_list$model,

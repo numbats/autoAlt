@@ -2,17 +2,27 @@
 % Please edit documentation in R/client_response.R
 \name{generate_alt_text}
 \alias{generate_alt_text}
-\title{Function to generate alt-text}
+\title{Function to generate alt-text for data visualisations in a Quarto or R Markdown file}
 \usage{
-generate_alt_text(file_path = NULL, api = NULL, userinstruct = "")
+generate_alt_text(
+  flnm = NULL,
+  outfile = NULL,
+  openai_model = "gpt-5.1",
+  api = NULL,
+  user_instruct = ""
+)
 }
 \arguments{
-\item{file_path}{Path to the QMD/RMD file}
+\item{flnm}{Character string. Path and file name for the qmd or rmd file containing the plots.}
 
-\item{api}{API key}
+\item{outfile}{Character string. Path and file name for the output file of alt-text. If not provided will write to alt-text.txt in current folder.}
 
-\item{userinstruct}{Optional user instruction. This will be appended to the system prompt.}
+\item{openai_model}{Character string. Name of the OpenAI model used to generate alt-text.}
+
+\item{api}{Character string. OpenAI API key used for authentication.}
+
+\item{user_instruct}{Character string (optional). Additional user instructions to refine the style or content of the alt-text; to be appended the default system prompt.}
 }
 \description{
-Function to generate alt-text
+Function to generate alt-text for data visualisations in a Quarto or R Markdown file
 }

@@ -1,14 +1,15 @@
 #' Function to generate alt-text for data visualisations in a Quarto or R Markdown file
-#' @param file_path Character string. Path to the QMD or RMD file containing the plots.
+#' @param flnm Character string. Path and file name for the qmd or rmd file containing the plots.
+#' @param outfile Character string. Path and file name for the output file of alt-text. If not provided will write to alt-text.txt in current folder.
 #' @param openai_model Character string. Name of the OpenAI model used to generate alt-text.
 #' @param api Character string. OpenAI API key used for authentication.
 #' @param user_instruct Character string (optional). Additional user instructions to refine the style or content of the alt-text; to be appended the default system prompt.
 #' @import glue
 
-generate_alt_text <- function(file_path = NULL, outfile = NULL, openai_model = "gpt-5.1", api = NULL, user_instruct = ""){
+generate_alt_text <- function(flnm = NULL, outfile = NULL, openai_model = "gpt-5.1", api = NULL, user_instruct = ""){
 
-  if (is.null(file_path)){
-    stop("Missing file path.")
+  if (is.null(flnm)){
+    stop("Missing input file.")
   }
 
   if (is.null(outfile)){

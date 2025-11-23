@@ -1,0 +1,68 @@
+---
+title: "Comparing GPT-4.1 and GPT-5.1 alt-text outputs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{compare-gpt-models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(autoalt)
+```
+
+# Overview
+This vignette demonstrates how the package generates alt-text for data visualisations from a Quarto document, and compares the quality of alt-text outputs from two different OpenAI models: GPT-4.1 and GPT-5.1.
+
+We use a small "economic and environmental" report as a worked example. The Quarto document includes three figures:
+- A time-series of US unemployment (`fig-unemployment`).
+- A bar chart of average ozone by month (`fig-ozone-month`).
+- A set of density curves for temperature by month (`fig-temp-density`)
+
+The goal is not to "prove" one model is universally better, but to show how they behave in this specific alt-text task and to justify a sensible default choice.
+
+# The example Quarto document
+The underlying Quarto file `test-2.qmd` contains three figures:
+- *Unemployment over time*: a single line chart showing monthly unemployment counts over several decades.
+- *Average ozone by month*: a column chart of mean ozone concentration across the warmer months.
+- *Temperature distributions by month*: overlapping density curves comparing daily maximum temperatures by month.
+
+Each figure has an accompanying caption describing the main message in plain language. The package reads this Quarto file, locates the labelled figures, and then asks the model to produce:
+- A single block of alt-text.
+- A short checklist (inspired by [a separate work](https://numbats.github.io/alt-text-for-data-plots/)) confirming that the alt-text covers key ingredients (chart type, axes, scales, visual encodings, patterns, and explicit assumptions).
+
+# Generating alt-text with different models
+In practice, you can swap models simply by changing the `openai_model` argument in `generate_alt_text()`.
+
+Each call returns a structure in a text file, with one section per figure, including the chunk label, the AI-generated alt-text, an alt-text 6-item check list, and some metadata.
+
+## What GPT5.1 produces
+For all three figures, GPT5.1 generates alt-text that is:
+- *Detailed and expansive.* The descriptions tend to be long, unpacking the layout, axis directions, visual encodings, and visible patterns in multiple sentences. For example, the unemployment plot is described as a “single time-series line graph” with a careful explanation of the axis roles, the cyclical “waves” in the line, and the absence of other encodings such as points or facets.
+- *Explicit about assumptions.* Each section ends with an “Assumptions” paragraph that spells out what is inferred (e.g. the exact date range, units, or colours when they are not stated in the prompt).
+- *Thorough about visual patterns.* GPT-5.1 spends time describing the shape of clusters and curves (for example, “arch-shaped” bar heights for ozone and “peaks at cooler values” for early-season temperature densities), so that a reader can build a fairly detailed mental picture.
+
+Overall, GPT-5.1 behaves like a cautious, very thorough describer. The trade-off is that the alt-text is relatively long and sometimes borders on repeating the caption content in narrative form.
+
+## What GPT4.1 produces
+On the same prompts, GPT-4.1 gives broadly similar content but in a noticeably more succinct style:
+- *Shorter descriptions.* The unemployment time-series, for instance, is summarised in a single paragraph that still names the chart type, axes, and the cyclical pattern in unemployment, but with fewer adjectival phrases and less repetition. 
+- *Straight to the point.* For the ozone bar chart and temperature densities, GPT-4.1 gets quickly to the structure ("bar chart", "density plot with overlapping curves") and the key pattern (higher ozone in midsummer; warmer, more variable temperatures in midsummer), without elaborating as much on non-essential layout details. 
+- *Still explicit about assumptions.* Each block includes a short assumptions note that mirrors GPT-5.1’s behaviour but in fewer words (for example, acknowledging that exact axis ranges or colours are not specified). 
+
+Overall, GPT-4.1 manages to cover the same conceptual ground as GPT-5.1, but with tighter prose and fewer digressions.
+
+# Conclusion
+For this test Quarto document, GPT-4.1 appears to be the better default choice:
+- It produces alt-text that is more succinct while still meeting all checklist criteria.
+- It avoids unnecessary repetition and long digressions that can make alt-text harder to consume via a screen reader.
+- It still provides explicit notes on assumptions, which is valuable for transparency.
+
+GPT-5.1 is still useful if you deliberately want very detailed descriptions (for instance, when training authors or debugging the alt-text generation process), but for everyday use and especially for accessibility where brevity matters, GPT-4.1 offers a more streamlined experience on this example.

@@ -5,7 +5,7 @@
 #' @param api Character string. OpenAI API key used for authentication.
 #' @param user_instruct Character string (optional). Additional user instructions to refine the style or content of the alt-text; to be appended the default system prompt.
 #' @import glue
-
+#' @export
 generate_alt_text <- function(flnm = NULL, outfile = NULL, openai_model = "gpt-5.1", api = NULL, user_instruct = ""){
 
   if (is.null(flnm)){

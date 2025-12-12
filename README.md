@@ -28,6 +28,19 @@ In cases where the example is not self-contained, OpenAI's code interpreter is u
 
 ![](file/alt_text.png)
 
+# Known errors
+
+If you get 
+
+```
+Error in `stringr::str_detect()`:
+! `pattern` can't be the empty string (`""`).
+Run `rlang::last_trace()` to see where the error occurred.
+```
+
+it means one of your R chunks that plots is not formed properly. We'll fix this soon.
+
+
 # Contribute
 
 Disclaimer: This package is in early development. Currently, it only works with QMD and RMD files where all code chunks are contained within a single document. It does not support workflows where code is stored in a separate R script.

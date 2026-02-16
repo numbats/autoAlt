@@ -6,7 +6,11 @@ extract_ggplot_code <- function(file_path) {
 
   content <- readLines(file_path)
   temp_file <- tempfile(fileext = ".txt")
-  knitr::purl(file_path, output = temp_file, documentation = 1) # no documentation just code boundary
+
+  suppressWarnings(
+    # Suppress warning message `xfun::attr() is depreciated`
+    knitr::purl(file_path, output = temp_file, documentation = 1) # no documentation just code boundary
+  )
 
 
   # Grab all code chunks from the .txt file

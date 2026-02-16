@@ -26,7 +26,9 @@ generate_alt_text <- function(flnm = NULL, outfile = NULL, openai_model = "gpt-5
   }
 
 
+
   content <- extract_ggplot_code(flnm)
+
 
   body_list <- list(
     model = openai_model,

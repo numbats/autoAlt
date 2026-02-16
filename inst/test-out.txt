@@ -1,0 +1,52 @@
+# Chunk label: fig-horsepower --------------------
+## Alt-text: A scatterplot showing the relationship between fuel efficiency and engine power for cars. The x-axis shows horsepower (hp), increasing from low to high values (roughly from around 50 up to about 350 hp), and the y-axis shows miles per gallon (mpg), ranging from low to high fuel efficiency (roughly from about 10 to 35 mpg). Each point represents a single car. The points form a downward-sloping cloud: cars with low horsepower tend to have higher mpg, while cars with high horsepower tend to have lower mpg, indicating a clear negative correlation and illustrating the trade-off between engine power and fuel economy. No additional visual encodings such as colour groups, shapes, or facets are described or implied.
+
+Assumptions: I assume typical ranges of hp and mpg from the standard `mtcars` dataset, and that only a single scatterplot layer is used without extra aesthetics such as colour by group or faceting, since these were not specified.
+
+Checklist:
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): @fig-horsepower shows the relationship between miles per gallon (mpg) and horsepower (hp) in the dataset. As expected, there is a negative correlation: cars with higher horsepower generally tend to have lower fuel efficiency. This inverse relationship highlights the trade-off between engine power and fuel economy.
+
+## Usage: BrailleR, Cummulated cost: NA, Cummulated token usage: 1018
+
+
+# Chunk label: fig-cylinders --------------------
+## Alt-text: A boxplot showing how car fuel efficiency varies with engine size. The x-axis lists the number of cylinders as three groups (4, 6, and 8 cylinders), and the y-axis shows miles per gallon (mpg), on a scale from low to high fuel efficiency (approximately from around 10 to 35 mpg). Each group has a single vertical box summarising the mpg distribution for cars with that cylinder count, with median lines and whiskers indicating spread and any individual points showing potential outliers. The box for 4-cylinder cars is positioned highest on the mpg scale, indicating the greatest fuel efficiency; the 6-cylinder group lies in the middle; and the 8-cylinder group is lowest, showing the poorest fuel efficiency. Overall, the plot shows a clear pattern of decreasing mpg as the number of cylinders increases, highlighting that larger engines tend to be less fuel efficient. No additional colour, shape, or faceting is indicated beyond the three cylinder groups on the x-axis.
+
+Assumptions: I assume the plot uses three discrete cylinder categories (4, 6, 8), standard boxplot elements (median, quartiles, whiskers, and possible outliers), and an mpg range similar to the common `mtcars` dataset, since exact axis limits and graphic options were not provided.
+
+Checklist:
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): This boxplot (@fig-cylinders) illustrates how fuel efficiency (mpg) varies by the number of cylinders in a car's engine. Cars with 4 cylinders tend to have the highest mpg, while 8-cylinder cars generally show the lowest mpg values. This reinforces the idea that larger engines are typically less fuel efficient.
+
+## Usage: BrailleR, Cummulated cost: NA, Cummulated token usage: 2791
+
+
+# Chunk label: fig-weight-MPG --------------------
+## Alt-text: Scatterplot showing the relationship between car weight and fuel efficiency, with points coloured or shaped by transmission type. The x-axis shows car weight (in thousands of pounds), increasing from lighter to heavier vehicles (approximately 1.5 to 5.5), and the y-axis shows fuel efficiency in miles per gallon (mpg), ranging from about 10 to 35 mpg. Each point represents a car; one visual encoding (such as colour or point shape) distinguishes automatic from manual transmissions, with manual coded as 1 and automatics as 0. The cloud of points slopes downward: as weight increases, mpg generally decreases, indicating that heavier cars are less fuel efficient. Within this trend, manual-transmission cars tend to lie slightly above automatics at similar mid-range weights, suggesting modestly better fuel economy for manual cars in those weight bands.
+
+Assumptions: I assume the standard `mtcars` dataset, weight in 1000 lb units (wt), a single scatterplot panel without faceting, and a two-level aesthetic (colour or shape) for transmission type, because specific axis limits and aesthetic choices were not provided.
+
+Checklist:
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): @fig-weight-MPG explores how car weight influences fuel efficiency, while also distinguishing between automatic and manual transmissions. Heavier cars tend to have lower mpg, consistent with expectations. Interestingly, manual transmission cars (coded as 1) tend to show slightly better mpg than automatics, particularly in mid-weight ranges.
+
+## Usage: BrailleR, Cummulated cost: NA, Cummulated token usage: 5280

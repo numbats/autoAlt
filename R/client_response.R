@@ -6,7 +6,7 @@
 #' @param user_instruct Character string (optional). Additional user instructions to refine the style or content of the alt-text; to be appended the default system prompt.
 #' @import glue
 #' @export
-generate_alt_text <- function(flnm = NULL, outfile = NULL, openai_model = "gpt-5.1", api = NULL, user_instruct = ""){
+generate_alt_text <- function(flnm = NULL, outfile = NULL, openai_model = "gpt-4.1", api = NULL, user_instruct = ""){
 
   if (is.null(flnm)){
     stop("Missing input file.")
@@ -87,9 +87,11 @@ For each checklist item, respond with “YES” or “NO”.
 
 Do not provide separate explanations or interpretations of the R code, reference text, or BrailleR output. Use them only as sources to inform the single piece of alt-text and the checklist."
 
+
+
   chat <- ellmer::chat_openai(
     model = body_list$model,
-    api_key = body_list$api_key, #TODO [api_key] arg is now deprecated in chat_openai(). To be refactored to [credentials] arg.
+    api_key = body_list$api_key,
     system_prompt = paste(body_list$user_instruct, sys_prompt)
   )
 
@@ -149,6 +151,7 @@ Do not provide separate explanations or interpretations of the R code, reference
     } else {
       reference_text <- ""
     }
+
 
     # HTTP request
     message(paste0("Evaluating ", content[[i]]$chunk_label, "..."))

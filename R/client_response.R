@@ -1,8 +1,9 @@
+# Accepted extension
+DOC_EXT <- c("qmd", "rmd")
+IMG_EXT <- c("png", "jpg", "jpeg", "webp", "gif")
+
 # Function to determine class of input
 determine_class <- function(input) {
-  # Accepted extension
-  DOC_EXT <- c("qmd", "rmd")
-  IMG_EXT <- c("png", "jpg", "jpeg", "webp", "gif")
   files <- expand_paths(input)
 
   exts <- tolower(tools::file_ext(files))
@@ -81,8 +82,22 @@ generate_alt_text <- function(
   )
 }
 
-# Default reserved for unknown class
-generate_alt_text.default <- function(flnm = NULL, ...) {}
+#' Default reserved for unknown class
+#' @export
+generate_alt_text.default <- function(input = NULL, ...) {
+  stop(
+    "Don't know how to generate alt-text from that input. ",
+    "Supported: ",
+    paste0(".", c(DOC_EXT, IMG_EXT), collapse = ", "),
+    "."
+  )
+}
+
+#' @export
+generate_alt_text.alt_unknown <- generate_alt_text.default
+
+
+# Method: Quarto/RMD ---------------------------------------------------------------
 
 generate_alt_text.rmd <- function(flnm = NULL, ...) {
   stop("Incomplete")

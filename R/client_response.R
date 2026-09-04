@@ -54,6 +54,160 @@ expand_paths <- function(input) {
   files
 }
 
+validate_input <- function(outfile, api) {
+  if (is.null(outfile)) {
+    outfile <- "alt-text.txt"
+    warning("Writing to alt-text.txt")
+  }
+
+  if (is.null(api)) {
+    stop(
+      "Missing OpenAI API key. Information on how to obtain an API key can be found here: https://help.openai.com/en/collections/3675931-api"
+    )
+  }
+
+  if (!is.character(api)) {
+    stop(
+      "API key needs to be in a character string. Information on how to obtain an API key can be found here: https://help.openai.com/en/collections/3675931-api"
+    )
+  }
+}
+
+new_alt_item <- function(kind, label, source, reference_paragraph = NULL, ...) {
+  structure(
+    list(
+      label = label,
+      source = source,
+      reference_paragraph = reference_paragraph,
+      ...
+    ),
+    class = c(paste0("alt_item_", kind), "alt_item")
+  )
+}
+
+client_responses <- function(body_list, content) {
+  if (length(content) == 0) {
+    stop("No plots found in the supplied input")
+  }
+
+  kind <- content[[1]]$kind # class "alt_item_code" or "alt_item_image"
+
+  chat <- ellmer::chat_openai(
+    model = body_list$model,
+    api_key = body_list$api_key,
+    system_prompt = paste(body_list$user_instruct, system_prompt(kind))
+  )
+
+  usage_tag <- if (kind == "image") "Visualisation" else "BrailleR"
+
+  output <- data.frame(
+    chunk_label = character(0),
+    response = character(0),
+    reference_paragraph = character(0),
+    usage = character(0)
+  )
+
+  total_cost <- 0
+  total_token <- 0
+
+  for (i in seq_along(content)) {
+    # For image input
+    if (kind == "image") {
+      client_input <- list(
+        ellmer::content_image_file(
+          path = content[[i]]$image_path,
+          content_type = "auto",
+          resize = "high"
+        )
+      )
+      # For RMD/QMD input
+    } else if (nzchar(paste(content[[i]]$chunk_code, collapse = ""))) {
+      # Token limit : 30000 / 7500 char
+      # System prompt: 763 char
+
+      env <- new.env(parent = globalenv())
+
+      # BrailleR only works for self-contained example hence tryCatch
+      braille_text <- tryCatch(
+        {
+          user_expr <- parse(
+            text = paste(content[[i]]$chunk_code, collapse = "\n")
+          )
+          plot_obj <- eval(user_expr, envir = env)
+
+          brailleR_output <- BrailleR::VI(plot_obj)
+
+          if (sum(nchar(brailleR_output$text)) >= body_list$max_token) {
+            ""
+          } else {
+            paste(brailleR_output$text, collapse = "\n")
+          }
+        },
+        # In case BrailleR throws an error
+        error = function(e) ""
+      )
+
+      client_input <- if (!nzchar(braille_text)) {
+        list(paste0(
+          "Interpret this code and use the interpretation to generate alt-text: ",
+          paste(content[[i]]$chunk_code, collapse = "\n")
+        ))
+      } else {
+        list(paste0("BrailleR input: ", braille_text))
+      }
+    }
+
+    if (!is.null(content[[i]]$reference_paragraph)) {
+      reference_text <- paste0(
+        "Reference text: ",
+        content[[i]]$reference_paragraph,
+        collapse = ""
+      )
+    } else {
+      reference_text <- ""
+    }
+
+    # HTTP request
+    respond <- do.call(
+      chat$chat,
+      c(client_input, if (nzchar(reference_text)) list(reference_text))
+    )
+
+    total_cost <- total_cost + chat$get_cost()[1]
+    total_tokens <- total_token + sum(chat$get_tokens()[3])[1]
+
+    usage <- paste0(
+      usage_tag,
+      ", Cummulated cost: ",
+      round(total_cost, 3),
+      ", Cummulated token usage: ",
+      total_tokens
+    )
+
+    output[nrow(output) + 1, ] <- list(
+      content[[i]]$chunk_label,
+      response,
+      if (is.null(content[[i]]$reference_paragraph)) {
+        NA_character_
+      } else {
+        content[[i]]$reference_paragraph
+      },
+      usage
+    )
+
+    # reset chat
+    chat$set_turns(list())
+  }
+
+  return(output)
+}
+
+
+write_alt_text <- function(input) {
+  stop("Incomplete")
+}
+
+#
 
 # Generic ---------------------------------------------------------------------------
 
@@ -82,6 +236,7 @@ generate_alt_text <- function(
   )
 }
 
+
 #' Default reserved for unknown class
 #' @export
 generate_alt_text.default <- function(input = NULL, ...) {
@@ -104,30 +259,48 @@ generate_alt_text.rmd <- function(flnm = NULL, ...) {
 }
 
 
-generate_alt_text.qmd <- function(flnm = NULL, ...) {
-  stop("Incomplete")
+generate_alt_text.qmd <- function(
+  flnm = NULL,
+  outfile = NULL,
+  openai_model = "gpt-5.1",
+  api = NULL,
+  user_instruct = ""
+) {
+  outfile <- validate_input(outfile, api)
+
+  files <- expand_paths(flnm)
+
+  # for i in item: extract_ggplot_code(i)
+  items <- unlist(
+    lapply(files, function(f) {
+      # For chunks in extract_ggplot_code(i): new_alt_item(ch) to determine an object of class "alt_item_code" or "alt_item_image"
+      lapply(extract_ggplot_code(f), function(ch) {
+        new_alt_item(
+          kind = "code",
+          label = ch$chunk_label,
+          source = f,
+          reference_paragraph = ch$reference_paragraph,
+          chunk_code = ch$chunk_code
+        )
+      })
+    }),
+    recursive = FALSE
+  )
+
+  body_list <- list(
+    model = openai_model,
+    api_key = api,
+    user_instruct = user_instruct,
+    max_token = 2048
+  )
+
+  result <- client_responses(body_list, items)
+  write_alt_text(result, outfile)
 }
 
 generate_alt_text.img <- function(flnm = NULL, ...) {
   stop("Incomplete")
 }
-
-#   if (is.null(outfile)) {
-#     outfile <- "alt-text.txt"
-#     warning("Writing to alt-text.txt")
-#   }
-
-#   if (is.null(api)) {
-#     stop(
-#       "Missing OpenAI API key. Information on how to obtain an API key can be found here: https://help.openai.com/en/collections/3675931-api"
-#     )
-#   }
-
-#   if (!is.character(api)) {
-#     stop(
-#       "API key needs to be in a character string. Information on how to obtain an API key can be found here: https://help.openai.com/en/collections/3675931-api"
-#     )
-#   }
 
 #   content <- extract_ggplot_code(flnm)
 
@@ -197,44 +370,44 @@ generate_alt_text.img <- function(flnm = NULL, ...) {
 #     usage = character(0)
 #   )
 
-#   for (i in seq_along(content)) {
-#     if (nzchar(content[[i]]$chunk_code)) {
-#       client_input <- " "
+# for (i in seq_along(content)) {
+#   if (nzchar(content[[i]]$chunk_code)) {
+#     client_input <- " "
 
-#       # Token limit : 30000 / 7500 char
-#       # System prompt: 763 char
-#       tryCatch(
-#         {
-#           user_expr <- parse(
-#             text = paste(content[[i]]$chunk_code, collapse = "\n")
-#           )
-#           # vi_expression <-  paste0("VI({\n", paste(body_list$input_code, collapse = "\n"), "\n})")
-#           # brailleR_output <- eval(parse(text = vi_expression))
-#           plot_obj <- eval(user_expr)
-
-#           brailleR_output <- VI(plot_obj)
-
-#           if (sum(nchar(brailleR_output$text)) >= body_list$max_token) {
-#             client_input <- ""
-#           } else {
-#             client_input <- brailleR_output$text
-#           }
-#         },
-#         error = function(e) {
-#           class(client_input) <- "error"
-#         }
-#       )
-
-#       # In case BrailleR throws an error
-#       if (inherits(client_input, "error") || !nzchar(client_input)) {
-#         client_input <- paste0(
-#           "Interpret this code and use the interpreation to generate alt-text",
-#           content[[i]]$chunk_code
+#     # Token limit : 30000 / 7500 char
+#     # System prompt: 763 char
+#     tryCatch(
+#       {
+#         user_expr <- parse(
+#           text = paste(content[[i]]$chunk_code, collapse = "\n")
 #         )
+#         # vi_expression <-  paste0("VI({\n", paste(body_list$input_code, collapse = "\n"), "\n})")
+#         # brailleR_output <- eval(parse(text = vi_expression))
+#         plot_obj <- eval(user_expr)
+
+#         brailleR_output <- VI(plot_obj)
+
+#         if (sum(nchar(brailleR_output$text)) >= body_list$max_token) {
+#           client_input <- ""
+#         } else {
+#           client_input <- brailleR_output$text
+#         }
+#       },
+#       error = function(e) {
+#         class(client_input) <- "error"
 #       }
-#     } else {
-#       client_input <- " "
+#     )
+
+#     # In case BrailleR throws an error
+#     if (inherits(client_input, "error") || !nzchar(client_input)) {
+#       client_input <- paste0(
+#         "Interpret this code and use the interpreation to generate alt-text",
+#         content[[i]]$chunk_code
+#       )
 #     }
+#   } else {
+#     client_input <- " "
+#   }
 
 #     client_input <- paste0("BrailleR input: ", client_input, collapse = "")
 

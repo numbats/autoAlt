@@ -149,7 +149,7 @@ Do not provide separate explanations or interpretations of the R code, reference
 
   chat <- ellmer::chat_openai(
     model = body_list$model,
-    api_key = body_list$api_key, #TODO [api_key] arg is now deprecated in chat_openai(). To be refactored to [credentials] arg.
+    api_key = body_list$api_key,
     system_prompt = paste(body_list$user_instruct, sys_prompt)
   )
 

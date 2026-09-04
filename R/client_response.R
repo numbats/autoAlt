@@ -1,3 +1,59 @@
+# Function to determine class of input
+determine_class <- function(input) {
+  # Accepted extension
+  DOC_EXT <- c("qmd", "rmd")
+  IMG_EXT <- c("png", "jpg", "jpeg", "webp", "gif")
+  files <- expand_paths(input)
+
+  exts <- tolower(tools::file_ext(files))
+
+  # Determine if the input is a Doc (RMD/QMD) or Image
+  is_doc <- exts %in% DOC_EXT
+  is_img <- exts %in% IMG_EXT
+
+  if (!any(is_doc | is_img)) {
+    return(structure(input, class = c("alt_unknown", "alt_input")))
+  }
+
+  cls <- if (all(is_doc)) {
+    if (all(exts[is_doc] == "rmd")) "rmd" else "qmd"
+  } else if (all(is_img)) {
+    "image"
+  } else {
+    "mixed"
+  }
+
+  structure(input, class = c(cls, "alt_input"))
+}
+
+# Rationale: Ideally, we want mulitple input (null plot and line up plot)
+expand_paths <- function(input) {
+  files <- unlist(lapply(input, function(p) {
+    if (dir.exists(p)) {
+      list.files(
+        p,
+        pattern = paste0(
+          "\\.(",
+          paste(c(DOC_EXT, IMG_EXT), collapse = "|"),
+          ")$"
+        ),
+        full.names = TRUE,
+        ignore.case = TRUE
+      )
+    } else {
+      p
+    }
+  }))
+
+  missing <- files[!file.exists(files)]
+  if (length(missing) > 0) {
+    stop("File(s) not found: ", paste(missing, collapse = ", "))
+  }
+
+  files
+}
+
+
 # Generic ---------------------------------------------------------------------------
 
 #' Function to generate alt-text for data visualisations in a Quarto or R Markdown file

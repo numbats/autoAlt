@@ -138,7 +138,7 @@ client_responses <- function(body_list, content) {
           brailleR_output <- BrailleR::VI(plot_obj)
 
           if (sum(nchar(brailleR_output$text)) >= body_list$max_token) {
-            ""
+            " "
           } else {
             paste(brailleR_output$text, collapse = "\n")
           }
@@ -203,8 +203,17 @@ client_responses <- function(body_list, content) {
 }
 
 
-write_alt_text <- function(input) {
-  stop("Incomplete")
+write_alt_text <- function(input, outfile) {
+  alt_text <- glue::glue(
+    "# Chunk label: {input$chunk_label} --------------------",
+    "\n## Alt-text: {input$response}",
+    "\n\n## Caption (for reference): {input$reference_paragraph}",
+    "\n\n## Usage: {input$usage}",
+  ) |>
+    paste(collapse = "\n\n\n")
+
+  writeLines(alt_text, outfile)
+  message(paste0("Output saved to ", outfile))
 }
 
 #

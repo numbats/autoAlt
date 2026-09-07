@@ -1,3 +1,203 @@
+# System Prompt ---------------------------------------------------------------------
+
+altText_guideline <- "
+Naturally describes:
+    - the chart type
+    - the variables on each axis
+    - approximate axis ranges
+    - how data are mapped to visual elements (e.g. colour, shape, size, facets)
+    - any visible patterns, relationships, clusters, trends, or notable outliers
+    - Includes brief interpretation of the data where this is relevant to understanding the plot.
+    - Avoids starting with phrases such as “Alt-text:” and does not use labels like “Iteration”.
+
+If the prompt lacks detail, make reasonable assumptions. Clearly flag these assumptions in a short note after the alt-text.
+After you have written the alt-text, generate a short checklist confirming whether you have covered the following items for this specific graph:
+
+1. Identified chart type.
+2. Named axes and variables.
+3. Mentioned approximate ranges or scales (where meaningful).
+4. Described data mappings (e.g. colour/shape/size/facets).
+5. Described main patterns, trends, or clusters.
+6. Explicitly noted any assumptions.
+
+For each checklist item, respond with “YES” or “NO”.
+"
+
+system_prompt <- function(kind) {
+  begin <- switch(
+    kind,
+    alt_item_code = " You are a researcher tasked with generating one concise version of alt-text for a graph, based on R code, BrailleR output, and reference text.
+    Your role is to analyse the available information (R code, BrailleR output, statistical summaries, and reference text) and produce clear, informative alt-text that: ",
+    # alt_item_image = " You are a researcher tasked with generating one concise version of alt-text for a graph, based on image(s) provided and reference text.
+    # Read the value directly from the image. Produce clear, informative alt-text that: "
+    alt_item_image = "You are a researcher tasked with generating one concise version of alt-text for a graph, based on the image(s) provided and reference text.
+    You may be given more than one image. When you are, they are panels or views of a single figure, not separate figures. Describe them together as one graph: note what the panels share, such as chart type, axes and scales, and how they differ from one another. Produce exactly one piece of alt-text covering all of them, never one description per image.
+    Read the values directly from the image(s). Produce clear, informative alt-text that:"
+  )
+
+  end <- switch(
+    kind,
+    alt_item_code = "Do not provide separate explanations or interpretations of the R code, reference text, or BrailleR output. Use them only as sources to inform the single piece of alt-text and the checklist.",
+    alt_item_image = "Do not guess at number you cannot see. If any part of the image is illegible or ambigious, say so in a short note after the alt-text rather than inventing a value. 
+    Do not provide separate explanations or interpretations of the image or reference text. Use them only as sources to inform the single piece of alt-text and the checklist."
+  )
+
+  paste0(begin, altText_guideline, end)
+}
+
+#
+
+# Generic ---------------------------------------------------------------------------
+
+#' Function to generate alt-text for data visualisations in a Quarto or R Markdown file
+#' @param flnm Character string. Path and file name for the qmd or rmd file containing the plots.
+#' @param outfile Character string. Path and file name for the output file of alt-text. If not provided will write to alt-text.txt in current folder.
+#' @param openai_model Character string. Name of the OpenAI model used to generate alt-text.
+#' @param api Character string. OpenAI API key used for authentication.
+#' @param user_instruct Character string (optional). Additional user instructions to refine the style or content of the alt-text; to be appended the default system prompt.
+#' @import glue
+#' @export
+generate_alt_text <- function(
+  flnm = NULL,
+  outfile = NULL,
+  openai_model = "gpt-5.1",
+  api = NULL,
+  user_instruct = "",
+  ...
+) {
+  if (is.null(flnm)) {
+    stop("Missing input file.")
+  }
+
+  UseMethod(
+    "generate_alt_text",
+    determine_class(flnm)
+  )
+}
+
+
+#' Default reserved for unknown class
+#' @export
+generate_alt_text.default <- function(input = NULL, ...) {
+  stop(
+    "Don't know how to generate alt-text from that input. ",
+    "Supported: ",
+    paste0(".", c(DOC_EXT, IMG_EXT), collapse = ", "),
+    "."
+  )
+}
+
+#' @export
+generate_alt_text.alt_unknown <- generate_alt_text.default
+
+
+# Method: Quarto/RMD ---------------------------------------------------------------
+
+#' @export
+generate_alt_text.qmd <- function(
+  flnm = NULL,
+  outfile = NULL,
+  openai_model = "gpt-5.1",
+  api = NULL,
+  user_instruct = ""
+) {
+  outfile <- validate_input(outfile, api)
+
+  files <- expand_paths(flnm)
+
+  # for i in item: extract_ggplot_code(i)
+  items <- unlist(
+    lapply(files, function(f) {
+      # For chunks in extract_ggplot_code(i): new_alt_item(ch) to determine an object of class "alt_item_code" or "alt_item_image"
+      lapply(extract_ggplot_code(f), function(ch) {
+        new_alt_item(
+          kind = "code",
+          label = ch$chunk_label,
+          source = f,
+          reference_paragraph = ch$reference_paragraph,
+          chunk_code = ch$chunk_code
+        )
+      })
+    }),
+    recursive = FALSE
+  )
+
+  body_list <- list(
+    model = openai_model,
+    api_key = api,
+    user_instruct = user_instruct,
+    max_token = 2048
+  )
+
+  result <- client_responses(body_list, items)
+  write_alt_text(result, outfile)
+}
+
+#' @export
+generate_alt_text.rmd <- generate_alt_text.qmd
+
+
+# Method: Image ---------------------------------------------------------------
+#' @export
+generate_alt_text.image <- function(
+  flnm = NULL,
+  outfile = NULL,
+  openai_model = "gpt-5.1",
+  api = NULL,
+  user_instruct = "",
+  captions = NULL,
+  combine = FALSE
+) {
+  outfile <- validate_input(outfile, api)
+
+  files <- expand_paths(flnm)
+
+  # Validate captions
+  caption <- lookup_captions(captions, files, combine)
+
+  # Option to evaluate multiple images to produce a single Alt-text
+  items <- if (isTRUE(combine)) {
+    # Upload all images in one API call -> produces a single alt-text
+    list(
+      new_alt_item(
+        kind = "image",
+        label = if (length(files) == 1) {
+          tools::file_path_sans_ext(basename(files))
+        } else {
+          basename(dirname(files[1]))
+        },
+        source = files,
+        reference_paragraph = if (is.na(caption[1])) NULL else caption[1],
+        image_path = files
+      )
+    )
+  } else {
+    # Upload one image per API call -> length(files) x alt-text
+    # For i in images
+    lapply(seq_along(files), function(i) {
+      key <- basename(files[i]) # File name (without the full directory) as key
+      new_alt_item(
+        kind = "image",
+        label = tools::file_path_sans_ext(key), # Image name without extension
+        source = files[i],
+        reference_paragraph = if (is.na(caption[i])) NULL else caption[i],
+        image_path = files[i]
+      )
+    })
+  }
+
+  body_list <- list(
+    model = openai_model,
+    api_key = api,
+    user_instruct = user_instruct,
+    max_token = 2048
+  )
+
+  result <- client_responses(body_list, items)
+
+  write_alt_text(result, outfile)
+}
+
 # Helper Functions ------------------------------------------------------------------
 
 # Accepted extension
@@ -305,345 +505,3 @@ write_alt_text <- function(input, outfile) {
   writeLines(alt_text, outfile)
   message(paste0("Output saved to ", outfile))
 }
-
-
-# System Prompt ---------------------------------------------------------------------
-
-altText_guideline <- "
-Naturally describes:
-    - the chart type
-    - the variables on each axis
-    - approximate axis ranges
-    - how data are mapped to visual elements (e.g. colour, shape, size, facets)
-    - any visible patterns, relationships, clusters, trends, or notable outliers
-    - Includes brief interpretation of the data where this is relevant to understanding the plot.
-    - Avoids starting with phrases such as “Alt-text:” and does not use labels like “Iteration”.
-
-If the prompt lacks detail, make reasonable assumptions. Clearly flag these assumptions in a short note after the alt-text.
-After you have written the alt-text, generate a short checklist confirming whether you have covered the following items for this specific graph:
-
-1. Identified chart type.
-2. Named axes and variables.
-3. Mentioned approximate ranges or scales (where meaningful).
-4. Described data mappings (e.g. colour/shape/size/facets).
-5. Described main patterns, trends, or clusters.
-6. Explicitly noted any assumptions.
-
-For each checklist item, respond with “YES” or “NO”.
-"
-
-system_prompt <- function(kind) {
-  begin <- switch(
-    kind,
-    alt_item_code = " You are a researcher tasked with generating one concise version of alt-text for a graph, based on R code, BrailleR output, and reference text.
-    Your role is to analyse the available information (R code, BrailleR output, statistical summaries, and reference text) and produce clear, informative alt-text that: ",
-    # alt_item_image = " You are a researcher tasked with generating one concise version of alt-text for a graph, based on image(s) provided and reference text.
-    # Read the value directly from the image. Produce clear, informative alt-text that: "
-    alt_item_image = "You are a researcher tasked with generating one concise version of alt-text for a graph, based on the image(s) provided and reference text.
-    You may be given more than one image. When you are, they are panels or views of a single figure, not separate figures. Describe them together as one graph: note what the panels share, such as chart type, axes and scales, and how they differ from one another. Produce exactly one piece of alt-text covering all of them, never one description per image.
-    Read the values directly from the image(s). Produce clear, informative alt-text that:"
-  )
-
-  end <- switch(
-    kind,
-    alt_item_code = "Do not provide separate explanations or interpretations of the R code, reference text, or BrailleR output. Use them only as sources to inform the single piece of alt-text and the checklist.",
-    alt_item_image = "Do not guess at number you cannot see. If any part of the image is illegible or ambigious, say so in a short note after the alt-text rather than inventing a value. 
-    Do not provide separate explanations or interpretations of the image or reference text. Use them only as sources to inform the single piece of alt-text and the checklist."
-  )
-
-  paste0(begin, altText_guideline, end)
-}
-
-#
-
-# Generic ---------------------------------------------------------------------------
-
-#' Function to generate alt-text for data visualisations in a Quarto or R Markdown file
-#' @param flnm Character string. Path and file name for the qmd or rmd file containing the plots.
-#' @param outfile Character string. Path and file name for the output file of alt-text. If not provided will write to alt-text.txt in current folder.
-#' @param openai_model Character string. Name of the OpenAI model used to generate alt-text.
-#' @param api Character string. OpenAI API key used for authentication.
-#' @param user_instruct Character string (optional). Additional user instructions to refine the style or content of the alt-text; to be appended the default system prompt.
-#' @import glue
-#' @export
-generate_alt_text <- function(
-  flnm = NULL,
-  outfile = NULL,
-  openai_model = "gpt-5.1",
-  api = NULL,
-  user_instruct = "",
-  ...
-) {
-  if (is.null(flnm)) {
-    stop("Missing input file.")
-  }
-
-  UseMethod(
-    "generate_alt_text",
-    determine_class(flnm)
-  )
-}
-
-
-#' Default reserved for unknown class
-#' @export
-generate_alt_text.default <- function(input = NULL, ...) {
-  stop(
-    "Don't know how to generate alt-text from that input. ",
-    "Supported: ",
-    paste0(".", c(DOC_EXT, IMG_EXT), collapse = ", "),
-    "."
-  )
-}
-
-#' @export
-generate_alt_text.alt_unknown <- generate_alt_text.default
-
-
-# Method: Quarto/RMD ---------------------------------------------------------------
-
-#' @export
-generate_alt_text.qmd <- function(
-  flnm = NULL,
-  outfile = NULL,
-  openai_model = "gpt-5.1",
-  api = NULL,
-  user_instruct = ""
-) {
-  outfile <- validate_input(outfile, api)
-
-  files <- expand_paths(flnm)
-
-  # for i in item: extract_ggplot_code(i)
-  items <- unlist(
-    lapply(files, function(f) {
-      # For chunks in extract_ggplot_code(i): new_alt_item(ch) to determine an object of class "alt_item_code" or "alt_item_image"
-      lapply(extract_ggplot_code(f), function(ch) {
-        new_alt_item(
-          kind = "code",
-          label = ch$chunk_label,
-          source = f,
-          reference_paragraph = ch$reference_paragraph,
-          chunk_code = ch$chunk_code
-        )
-      })
-    }),
-    recursive = FALSE
-  )
-
-  body_list <- list(
-    model = openai_model,
-    api_key = api,
-    user_instruct = user_instruct,
-    max_token = 2048
-  )
-
-  result <- client_responses(body_list, items)
-  write_alt_text(result, outfile)
-}
-
-#' @export
-generate_alt_text.rmd <- generate_alt_text.qmd
-
-
-# Method: Image ---------------------------------------------------------------
-#' @export
-generate_alt_text.image <- function(
-  flnm = NULL,
-  outfile = NULL,
-  openai_model = "gpt-5.1",
-  api = NULL,
-  user_instruct = "",
-  captions = NULL,
-  combine = FALSE
-) {
-  outfile <- validate_input(outfile, api)
-
-  files <- expand_paths(flnm)
-
-  # Validate captions
-  caption <- lookup_captions(captions, files, combine)
-
-  # Option to evaluate multiple images to produce a single Alt-text
-  items <- if (isTRUE(combine)) {
-    # Upload all images in one API call -> produces a single alt-text
-    list(
-      new_alt_item(
-        kind = "image",
-        label = if (length(files) == 1) {
-          tools::file_path_sans_ext(basename(files))
-        } else {
-          basename(dirname(files[1]))
-        },
-        source = files,
-        reference_paragraph = if (is.na(caption[1])) NULL else caption[1],
-        image_path = files
-      )
-    )
-  } else {
-    # Upload one image per API call -> length(files) x alt-text
-    # For i in images
-    lapply(seq_along(files), function(i) {
-      key <- basename(files[i]) # File name (without the full directory) as key
-      new_alt_item(
-        kind = "image",
-        label = tools::file_path_sans_ext(key), # Image name without extension
-        source = files[i],
-        reference_paragraph = if (is.na(caption[i])) NULL else caption[i],
-        image_path = files[i]
-      )
-    })
-  }
-
-  body_list <- list(
-    model = openai_model,
-    api_key = api,
-    user_instruct = user_instruct,
-    max_token = 2048
-  )
-
-  result <- client_responses(body_list, items)
-
-  write_alt_text(result, outfile)
-}
-
-#   content <- extract_ggplot_code(flnm)
-
-#   body_list <- list(
-#     model = openai_model,
-#     api_key = api,
-#     user_instruct = user_instruct,
-#     max_token = 2048
-#   )
-
-#   result <- client_responses(body_list, content)
-
-#   alt_text <- glue::glue(
-#     "# Chunk label: {result$chunk_label} --------------------",
-#     "\n## Alt-text: {result$response}",
-#     "\n\n## Caption (for reference): {result$reference_paragraph}",
-#     "\n\n## Usage: {result$usage}",
-#   ) |>
-#     paste(collapse = "\n\n\n")
-
-#   writeLines(alt_text, outfile)
-#   message(print(paste("Output saved to ", outfile)))
-# }
-
-# #' Function to sent HTTP request to OpenAI
-# #' @param body_list default OpenAI parameters
-# #' @param content Parsed content
-# client_responses <- function(body_list, content) {
-#   sys_prompt <- "You are a researcher tasked with generating one concise version of alt-text for a graph, based on R code, BrailleR output, and reference text.
-
-# Your role is to analyse the available information (R code, BrailleR output, statistical summaries, and reference text) and produce clear, informative alt-text that:
-
-# - Naturally describes:
-#   - the chart type
-#   - the variables on each axis
-#   - approximate axis ranges
-#   - how data are mapped to visual elements (e.g. colour, shape, size, facets)
-#   - any visible patterns, relationships, clusters, trends, or notable outliers
-# - Includes brief interpretation of the data where this is relevant to understanding the plot.
-# - Avoids starting with phrases such as “Alt-text:” and does not use labels like “Iteration”.
-
-# If the prompt lacks detail, make reasonable assumptions. Clearly flag these assumptions in a short note after the alt-text.
-
-# After you have written the alt-text, generate a short checklist confirming whether you have covered the following items for this specific graph:
-
-# 1. Identified chart type.
-# 2. Named axes and variables.
-# 3. Mentioned approximate ranges or scales (where meaningful).
-# 4. Described data mappings (e.g. colour/shape/size/facets).
-# 5. Described main patterns, trends, or clusters.
-# 6. Explicitly noted any assumptions.
-
-# For each checklist item, respond with “YES” or “NO”.
-
-# Do not provide separate explanations or interpretations of the R code, reference text, or BrailleR output. Use them only as sources to inform the single piece of alt-text and the checklist."
-
-#   chat <- ellmer::chat_openai(
-#     model = body_list$model,
-#     api_key = body_list$api_key,
-#     system_prompt = paste(body_list$user_instruct, sys_prompt)
-#   )
-
-#   output <- data.frame(
-#     chunk_label = character(0),
-#     response = character(0),
-#     reference_paragraph = character(0),
-#     usage = character(0)
-#   )
-
-# for (i in seq_along(content)) {
-#   if (nzchar(content[[i]]$chunk_code)) {
-#     client_input <- " "
-
-#     # Token limit : 30000 / 7500 char
-#     # System prompt: 763 char
-#     tryCatch(
-#       {
-#         user_expr <- parse(
-#           text = paste(content[[i]]$chunk_code, collapse = "\n")
-#         )
-#         # vi_expression <-  paste0("VI({\n", paste(body_list$input_code, collapse = "\n"), "\n})")
-#         # brailleR_output <- eval(parse(text = vi_expression))
-#         plot_obj <- eval(user_expr)
-
-#         brailleR_output <- VI(plot_obj)
-
-#         if (sum(nchar(brailleR_output$text)) >= body_list$max_token) {
-#           client_input <- ""
-#         } else {
-#           client_input <- brailleR_output$text
-#         }
-#       },
-#       error = function(e) {
-#         class(client_input) <- "error"
-#       }
-#     )
-
-#     # In case BrailleR throws an error
-#     if (inherits(client_input, "error") || !nzchar(client_input)) {
-#       client_input <- paste0(
-#         "Interpret this code and use the interpreation to generate alt-text",
-#         content[[i]]$chunk_code
-#       )
-#     }
-#   } else {
-#     client_input <- " "
-#   }
-
-#     client_input <- paste0("BrailleR input: ", client_input, collapse = "")
-
-#     if (!is.null(content[[i]]$reference_paragraph)) {
-#       reference_text <- paste0(
-#         "Reference text: ",
-#         content[[i]]$reference_paragraph,
-#         collapse = ""
-#       )
-#     } else {
-#       reference_text <- ""
-#     }
-
-#     # HTTP request
-#     message(paste0("Evaluating ", content[[i]]$chunk_label, "..."))
-#     response <- chat$chat(paste0(sys_prompt, client_input, reference_text))
-#     usage <- paste0(
-#       "BrailleR",
-#       ", Cummulated cost: ",
-#       round(chat$get_cost()[1], 3),
-#       ", Cummulated token usage: ",
-#       sum(chat$get_tokens()[3])[1]
-#     )
-
-#     output[nrow(output) + 1, ] <- list(
-#       content[[i]]$chunk_label,
-#       response,
-#       content[[i]]$reference_paragraph,
-#       usage
-#     )
-#   }
-
-#   return(output)
-# }

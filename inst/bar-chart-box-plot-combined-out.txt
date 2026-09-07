@@ -1,7 +1,7 @@
 # Chunk label: figures --------------------
-## Alt-text: A two-panel figure compares penguin species counts and body mass. The left panel is a vertical bar chart with Species on the x‑axis (Adelie, Chinstrap, Gentoo) and Number of Penguins on the y‑axis from 0 to about 160. Adelie has the tallest bar at just over 150 individuals, Gentoo is second at roughly 120, and Chinstrap is lowest at about 70, indicating Adelie are the most numerous and Chinstrap the least numerous in the sample. The right panel is a set of three vertical boxplots showing Body Mass (g) on the y‑axis from about 2600 to 6400 by Species on the x‑axis. Adelie and Chinstrap have similar body-mass distributions with medians near 3700 g, interquartile ranges roughly 3400–4000 g, and whiskers extending from about 2800 to 4700 g, with a few Chinstrap outliers around 2700 g and 4800 g. Gentoo penguins are clearly heavier, with a median near 5000 g, an interquartile range roughly 4700–5500 g, and whiskers from about 4000 to 6300 g, showing that although they are not the most numerous, they have substantially higher body mass than the other species.
+## Alt-text: Two related plots compare three penguin species. The first is a vertical bar chart with Species on the x‑axis (Adelie, Chinstrap, Gentoo) and Number of Penguins on the y‑axis from 0 to about 160. Adelie has the tallest bar at just over 150 individuals, Gentoo is second at about 125, and Chinstrap is lowest at around 70, indicating Adelie are most common and Chinstrap least common in the sample. The second plot is a set of side‑by‑side boxplots with Species on the x‑axis and Body Mass (g) on the y‑axis from about 2600 to 6400 g. Each species has one boxplot: Adelie and Chinstrap have similar body‑mass distributions with medians near 3700 g and interquartile ranges roughly 3400–4000 g, while Gentoo are clearly heavier, with a median around 5000 g and an interquartile range near 4700–5500 g; Gentoo also show the largest upper whisker, extending above 6000 g. A few outliers appear for Chinstrap around 2700 g (low) and 4800 g (high). Overall, Adelie are the most numerous but mid‑sized, Chinstrap are few and also mid‑sized, and Gentoo are moderately numerous and substantially heavier.
 
-Assumptions/notes: Axis tick labels for some exact values are approximated from the grid; individual numeric values are estimated rather than read precisely.
+Assumptions: Exact counts and gram values are approximated visually from bar heights and boxplot positions because specific numeric labels are not shown.
 
 Checklist  
 1. Identified chart type. YES  
@@ -11,6 +11,6 @@ Checklist
 5. Described main patterns, trends, or clusters. YES  
 6. Explicitly noted any assumptions. YES
 
-## Caption (for reference): NA NA
+## Caption (for reference): NA
 
-## Usage: Visualisation, Cummulated cost: 0.004, Cummulated token usage: 585
+## Usage: Visualisation, Cummulated cost: 0.004, Cummulated token usage: 582

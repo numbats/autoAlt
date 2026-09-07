@@ -1,16 +1,34 @@
-# Chunk label: figures --------------------
-## Alt-text: Single figure with two panels comparing penguin species. Left panel is a vertical bar chart with Species (Adelie, Chinstrap, Gentoo) on the x-axis and Number of Penguins on the y-axis from 0 to about 160. Adelie has the tallest bar at just over 150 individuals, Gentoo is second at around 125, and Chinstrap is lowest at roughly 70, indicating Adelie are most common and Chinstrap least common in the sample. Right panel is a set of three vertical boxplots showing Body Mass (g) on the y-axis from about 2600 to 6400 against the same Species on the x-axis. Adelie and Chinstrap have similar body-mass distributions, with medians near 3700 g and interquartile ranges roughly 3400–4000 g; each shows a few lower or upper outliers. Gentoo boxplot is shifted upward, with a median near 5000 g and interquartile range around 4700–5400 g, plus whiskers extending to about 4000 and 6300 g, indicating Gentoo are generally heavier than the other two species.
+# Chunk label: bar-chart --------------------
+## Alt-text: Vertical bar chart showing counts of penguins by species. The x-axis lists three species—Adelie, Chinstrap, and Gentoo—and the y-axis shows “Number of Penguins” from 0 to about 160. All bars are solid dark gray. Adelie has the tallest bar, at just over 150 penguins. Gentoo is second, at around 120 penguins. Chinstrap has the shortest bar, at roughly 70 penguins. Overall, Adelie penguins are most numerous in this dataset, followed by Gentoo, with Chinstrap least common.
 
-Assumptions: Axis limits and exact counts and body masses are estimated visually from the plotted scales, as precise numeric labels are not provided.
+Assumptions: Exact counts are estimated from bar heights, as specific numeric labels are not printed.
 
-Checklist:
-1. Identified chart type. YES
-2. Named axes and variables. YES
-3. Mentioned approximate ranges or scales (where meaningful). YES
-4. Described data mappings (e.g. colour/shape/size/facets). YES
-5. Described main patterns, trends, or clusters. YES
+Checklist  
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
 6. Explicitly noted any assumptions. YES
 
-## Caption (for reference): This is a caption
+## Caption (for reference): NA
 
-## Usage: Visualisation, Cummulated cost: 0.006, Cummulated token usage: 2078
+## Usage: Visualisation, Cummulated cost: 0.004, Cummulated token usage: 1306
+
+
+# Chunk label: box-plot --------------------
+## Alt-text: Single boxplot chart showing penguin body mass by species. The x‑axis is Species with three categories (Adelie, Chinstrap, Gentoo). The y‑axis is Body Mass in grams, ranging from about 2,600 g to 6,300 g. Each species is represented by a vertical box‑and‑whisker: Adelie and Chinstrap boxes are centered around 3,600–3,700 g with interquartile ranges roughly 3,400–4,000 g; Adelie extends from about 2,900 g to 4,700 g and Chinstrap from about 2,700 g to 4,500 g, with one high outlier near 4,800 g. Gentoo has a noticeably higher distribution, with the box centered around 5,000 g, an interquartile range of roughly 4,700–5,500 g, and whiskers from about 4,000 g to 6,200 g. Overall, Gentoo penguins are heavier than Adelie and Chinstrap, which have similar body mass distributions.
+
+Assumptions: Exact quartile and whisker values are approximated visually from the axis gridlines; precise numerical values are not labeled.
+
+Checklist  
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): NA
+
+## Usage: Visualisation, Cummulated cost: 0.008, Cummulated token usage: 1422

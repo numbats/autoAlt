@@ -1,0 +1,52 @@
+# Chunk label: fig-unemployment --------------------
+## Alt-text: A line chart shows the total number of unemployed persons in the United States over time, with calendar year on the horizontal axis and unemployment in thousands of people on the vertical axis. The data are monthly observations spanning several decades, drawn as a single continuous line of uniform thickness. The line fluctuates in a cyclical pattern: it rises sharply to distinct peaks during economic downturns, then falls back to lower levels during stronger labour market periods. Some peaks are higher and last longer, indicating prolonged recessions with elevated unemployment, while stretches where the line stays lower and more stable indicate relatively healthy employment conditions.
+
+Assumptions: The exact start and end years and precise unemployment range are not given in the prompt but are inferred to cover multiple decades of US monthly data with values in the order of thousands.
+
+Checklist:
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): @fig-unemployment shows monthly counts of unemployed persons in the United States over several decades. The time-series line reveals pronounced cyclical behaviour, with distinct peaks during economic downturns and troughs in stronger labour market periods. Longer stretches of elevated unemployment highlight prolonged recessions, while periods with lower, more stable values suggest relatively healthy employment conditions.
+
+## Usage: BrailleR, Cummulated cost: 0.003, Cummulated token usage: 753
+
+
+# Chunk label: fig-ozone-month --------------------
+## Alt-text: Vertical bar chart showing mean ozone concentration (in parts per billion) by month from May to September in New York. The x-axis lists months as discrete categories (May, June, July, August, September), and the y-axis shows mean ozone levels, roughly ranging from about 30 to 70 ppb. Each month is represented by a single solid bar of equal width and colour (no additional grouping or facets). Bar heights rise from May into midsummer (June and July have noticeably higher bars), then decline again in late summer and early autumn (August and September). Overall, the chart shows that average ozone pollution is lowest in late spring, peaks in midseason, and then falls back, consistent with stronger sunlight and higher temperatures driving higher ozone levels in the hottest months.
+
+Assumptions: Exact numerical values for monthly means are not visible from the code, so approximate y-axis ranges and the specific peak month(s) are inferred from typical patterns in the `airquality` dataset and the provided reference text.
+
+Checklist:
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): The bar chart in @fig-ozone-month summarises average ozone concentration across the warmer months. Ozone levels tend to rise from late spring into midsummer, reaching higher mean values in the middle of the season before dropping back again. This pattern suggests that ozone pollution intensifies during hotter months, consistent with the role of sunlight and temperature in ozone formation.
+
+## Usage: BrailleR, Cummulated cost: 0.007, Cummulated token usage: 837
+
+
+# Chunk label: fig-temp-density --------------------
+## Alt-text: Overlapping density plot showing the distribution of daily maximum temperatures (°F) in New York, with temperature on the x-axis (roughly spanning from cool to hot summer values, about 55–100°F) and density on the y-axis. Each month is represented by a semi-transparent, coloured density curve (one colour per month) so that areas of overlap are visible. Early-season months have density curves concentrated at lower temperatures, indicating generally cooler days. Mid-summer months show density curves shifted to higher temperatures with wider spreads, reflecting hotter and more variable conditions. By late summer, the curves move slightly back toward cooler temperatures, illustrating the gradual transition out of peak heat.
+
+Assumptions: Exact numeric axis limits and the specific months included (likely May–September) are inferred from typical `airquality` data and not directly stated in the prompt.
+
+Checklist:
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): @fig-temp-density compares the distributions of daily maximum temperatures across months using overlapping density curves. Early-season months show distributions concentrated at cooler temperatures, while midsummer months shift towards higher values and broader spreads. By late summer, the densities start to shift back slightly towards cooler conditions, reflecting the gradual transition out of peak heat.
+
+## Usage: BrailleR, Cummulated cost: 0.01, Cummulated token usage: 770

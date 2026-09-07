@@ -2,6 +2,7 @@
 
 S3method(generate_alt_text,alt_unknown)
 S3method(generate_alt_text,default)
+S3method(generate_alt_text,image)
 S3method(generate_alt_text,qmd)
 S3method(generate_alt_text,rmd)
 export(generate_alt_text)

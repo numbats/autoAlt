@@ -114,7 +114,7 @@ client_responses <- function(body_list, content) {
 
   for (i in seq_along(content)) {
     # For image input
-    if (kind == "image") {
+    if (kind == "alt_item_image") {
       client_input <- list(
         ellmer::content_image_file(
           path = content[[i]]$image_path,
@@ -280,7 +280,8 @@ generate_alt_text <- function(
   outfile = NULL,
   openai_model = "gpt-5.1",
   api = NULL,
-  user_instruct = ""
+  user_instruct = "",
+  ...
 ) {
   if (is.null(flnm)) {
     stop("Missing input file.")
@@ -355,9 +356,41 @@ generate_alt_text.rmd <- generate_alt_text.qmd
 
 
 # Method: Image ---------------------------------------------------------------
+#' @export
+generate_alt_text.image <- function(
+  flnm = NULL,
+  outfile = NULL,
+  openai_model = "gpt-5.1",
+  api = NULL,
+  user_instruct = "",
+  captions = NULL
+) {
+  outfile <- validate_input(outfile, api)
 
-generate_alt_text.img <- function(flnm = NULL, ...) {
-  stop("Incomplete")
+  files <- expand_paths(flnm)
+
+  # For i in images
+  items <- lapply(files, function(i) {
+    key <- basename(i) # File name (without the full directory) as key
+    new_alt_item(
+      kind = "image",
+      label = tools::file_path_sans_ext(key), # Image name without extension
+      source = i,
+      reference_paragraph = if (!is.null(captions)) captions[i] else NULL,
+      image_path = i
+    )
+  })
+
+  body_list <- list(
+    model = openai_model,
+    api_key = api,
+    user_instruct = user_instruct,
+    max_token = 2048
+  )
+
+  result <- client_responses(body_list, items)
+
+  write_alt_text(result, outfile)
 }
 
 #   content <- extract_ggplot_code(flnm)

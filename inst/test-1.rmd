@@ -49,6 +49,8 @@ ggplot(penguins, aes(x = species, y = body_mass_g)) +
     y = "Body Mass (g)"
   ) +
   theme_minimal()
+
+
 ```
 
 ## 3. Histogram
@@ -65,6 +67,7 @@ ggplot(penguins, aes(x = body_mass_g)) +
     y = "Count"
   ) +
   theme_minimal()
+
 ```
 
 ## 4. Bar Chart

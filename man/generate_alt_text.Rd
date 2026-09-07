@@ -9,7 +9,8 @@ generate_alt_text(
   outfile = NULL,
   openai_model = "gpt-5.1",
   api = NULL,
-  user_instruct = ""
+  user_instruct = "",
+  ...
 )
 }
 \arguments{

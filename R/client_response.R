@@ -310,10 +310,6 @@ generate_alt_text.alt_unknown <- generate_alt_text.default
 
 # Method: Quarto/RMD ---------------------------------------------------------------
 
-generate_alt_text.rmd <- function(flnm = NULL, ...) {
-  stop("Incomplete")
-}
-
 #' @export
 generate_alt_text.qmd <- function(
   flnm = NULL,
@@ -353,6 +349,12 @@ generate_alt_text.qmd <- function(
   result <- client_responses(body_list, items)
   write_alt_text(result, outfile)
 }
+
+#' @export
+generate_alt_text.rmd <- generate_alt_text.qmd
+
+
+# Method: Image ---------------------------------------------------------------
 
 generate_alt_text.img <- function(flnm = NULL, ...) {
   stop("Incomplete")

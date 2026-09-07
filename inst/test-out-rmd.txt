@@ -1,0 +1,88 @@
+# Chunk label: fig-scatter-plot --------------------
+## Alt-text: Scatter plot showing 342 penguins, with bill length (mm) on the x-axis (about 40–60 mm) and bill depth (mm) on the y-axis (about 15–20 mm). Each point is a large solid circle coloured by species: Adelie in strong reddish orange, Chinstrap in vivid yellowish green, and Gentoo in bright blue. The points form three visually distinct clusters, indicating that species differ systematically in their combinations of bill length and depth (for example, one cluster has generally shorter, deeper bills, while another has longer, shallower bills). Around 95% of points are visible without heavy overlap, so the separation between species groups is clear.
+
+Assumptions: Exact numeric ranges and the direction of differences among species clusters are inferred from axis labels and the description that “different species form distinct groups,” as the precise coordinates of points are not provided.
+
+Checklist:
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): Figure @fig-scatter-plot shows the relationship between bill length and bill depth. The different species form distinct groups.
+
+## Usage: BrailleR, Cummulated cost: 0.003, Cummulated token usage: 778
+
+
+# Chunk label: fig-box-plot --------------------
+## Alt-text: Vertical boxplot comparing body mass (grams) across three penguin species (Adelie, Chinstrap, Gentoo) on the x-axis, with body mass ranging from about 2,800 g to 6,300 g on the y-axis. Each species is represented by a single box with whiskers. Adelie and Chinstrap have similar distributions: both have a median around 3,700 g, boxes spanning roughly 3,350–4,000 g for Adelie and 3,488–3,950 g for Chinstrap, with whiskers from about 2,850–4,775 g (Adelie) and 2,900–4,550 g (Chinstrap). Chinstrap shows one low and one high outlier beyond its whiskers. Gentoo penguins are visibly heavier, with a higher median around 5,000 g, an interquartile range from about 4,700–5,500 g, and whiskers from about 3,950–6,300 g, with no outliers; their box is clearly shifted upward relative to the other two, indicating generally higher body mass.
+
+Assumptions: Species are ordered Adelie, Chinstrap, Gentoo from left to right on the x-axis; boxplot uses a standard definition of whiskers (to the most extreme non-outlier points).
+
+Checklist:
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): Figure @fig-box-plot compares the distribution of body mass across the three penguin species. Gentoo penguins generally have a higher body mass than the other species.
+
+## Usage: BrailleR, Cummulated cost: 0.008, Cummulated token usage: 994
+
+
+# Chunk label: fig-histogram --------------------
+## Alt-text: Histogram showing the distribution of penguin body mass in grams, with body mass on the x-axis from roughly 3,000 to 6,000 g and count of penguins on the y-axis from 0 to about 50. Fifteen adjacent vertical bars represent the number of penguins within successive body-mass intervals. The bars form a unimodal distribution with most penguins clustered in the mid-range (around the central bins) and fewer at the lowest and highest body masses, indicating substantial variation in body mass, likely reflecting differences between penguin species.
+
+Assumptions: Exact bin boundaries and bar heights are not given, so the central peak and tapering at both tails are inferred from the description of “substantial variation” and typical histogram shapes.
+
+Checklist:
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): Figure @fig-histogram shows the distribution of penguin body mass. The distribution contains substantial variation, reflecting differences between species.
+
+## Usage: BrailleR, Cummulated cost: 0.011, Cummulated token usage: 701
+
+
+# Chunk label: fig-bar-chart --------------------
+## Alt-text: Vertical bar chart showing the number of penguins (y-axis, from 0 to about 150) for each species (x-axis: Adelie, Chinstrap, Gentoo). The Adelie bar is tallest at about 152 penguins, Gentoo is next at about 124, and Chinstrap is lowest at about 68. Thus, Adelie has the most observations in the dataset, followed by Gentoo, with Chinstrap having the fewest.
+
+Assumptions: Values are treated as counts of individual penguins/observations; exact numeric heights are approximate from the axis scale.
+
+Checklist:  
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES (bars by species on x-axis, height as count)  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): Figure @fig-bar-chart shows the number of observations for each penguin species. Adelie has the largest number of observations in the dataset.
+
+## Usage: BrailleR, Cummulated cost: 0.014, Cummulated token usage: 727
+
+
+# Chunk label: fig-facetedPlot --------------------
+## Alt-text: Horizontal faceted scatterplot with three panels, each showing the relationship between flipper length (x-axis, 170–230 mm) and body mass (y-axis, 3000–6000 g) for a different penguin species: Adelie, Chinstrap, and Gentoo. Each panel contains dozens of large solid points representing individual penguins. Within every species, points form an upward trend: birds with longer flippers tend to have higher body mass. Adelie points are mostly clustered at shorter flipper lengths and lower body masses, Chinstrap points cluster at intermediate values, and Gentoo points cluster at the longest flipper lengths and highest body masses, suggesting species differ in overall size as well as showing a positive flipper–mass relationship.
+
+Assumptions: Exact numeric cluster centers and inter-species ordering (Adelie smallest, Gentoo largest) are inferred from common patterns in the palmerpenguins dataset, not directly stated in the prompt.
+
+Checklist:
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): Figure @fig-facetedPlot shows the relationship between flipper length and body mass separately for each penguin species. A positive relationship is visible within each species.
+
+## Usage: BrailleR, Cummulated cost: 0.017, Cummulated token usage: 888

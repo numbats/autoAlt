@@ -1,0 +1,101 @@
+---
+title: "Palmer Penguins Visualisation"
+author: "ChatGPT"
+output:
+  bookdown::html_document2
+---
+
+## Introduction
+
+The `palmerpenguins` dataset contains measurements of penguins from
+different species and islands. The following visualisations explore
+relationships and differences between penguin species.
+
+## 1. Scatter Plot
+
+
+Figure @fig-scatter-plot shows the relationship between bill length
+and bill depth. The different species form distinct groups.
+
+```{r fig-scatter-plot, echo=TRUE, fig.cap="Bill length and bill depth by penguin species."}
+library(ggplot2)
+library(palmerpenguins)
+
+ggplot(penguins, aes(x = bill_length_mm, 
+                     y = bill_depth_mm, 
+                     colour = species)) +
+  geom_point() +
+  labs(
+    x = "Bill Length (mm)",
+    y = "Bill Depth (mm)",
+    colour = "Species"
+  ) +
+  theme_minimal()
+```
+
+
+
+## 2. Box Plot
+
+Figure @fig-box-plot compares the distribution of body mass across
+the three penguin species. Gentoo penguins generally have a higher body
+mass than the other species.
+
+```{r fig-box-plot}
+ggplot(penguins, aes(x = species, y = body_mass_g)) +
+  geom_boxplot() +
+  labs(
+    x = "Species",
+    y = "Body Mass (g)"
+  ) +
+  theme_minimal()
+```
+
+## 3. Histogram
+
+Figure @fig-histogram shows the distribution of penguin body mass.
+The distribution contains substantial variation, reflecting differences
+between species.
+
+```{r fig-histogram}
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(bins = 15) +
+  labs(
+    x = "Body Mass (g)",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+
+## 4. Bar Chart
+
+Figure @fig-bar-chart shows the number of observations for each
+penguin species. Adelie has the largest number of observations in the
+dataset.
+
+```{r fig-bar-chart} 
+ggplot(penguins, aes(x = species)) +
+  geom_bar() +
+  labs(
+    x = "Species",
+    y = "Number of Penguins"
+  ) +
+  theme_minimal()
+```
+
+## 5. Faceted Scatter Plot
+
+Figure @fig-facetedPlot shows the relationship between flipper
+length and body mass separately for each penguin species. A positive
+relationship is visible within each species.
+
+```{r fig-facetedPlot}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point() +
+  facet_wrap(~species) +
+  labs(
+    x = "Flipper Length (mm)",
+    y = "Body Mass (g)"
+  ) +
+  theme_minimal()
+```

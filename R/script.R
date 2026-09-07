@@ -4,7 +4,7 @@
 extract_ggplot_code <- function(file_path) {
   # Return: List of a list for each chunk info (chunk label, code, and reference paragraph)
 
-  content <- readLines(file_path)
+  content <- readLines(file_path, warn = FALSE)
   temp_file <- tempfile(fileext = ".txt")
 
   suppressWarnings(

@@ -1,7 +1,7 @@
 # Chunk label: bar-chart --------------------
-## Alt-text: Vertical bar chart showing the number of penguins by species. The x‑axis lists three species categories: Adelie, Chinstrap, and Gentoo. The y‑axis is labeled “Number of Penguins” and ranges from 0 to about 160. Each species is represented by a single dark grey bar: Adelie is the tallest at just over 150 penguins, Chinstrap is the shortest at around 65–70 penguins, and Gentoo is intermediate at about 120–130 penguins. Overall, Adelie are most numerous, Chinstrap least, with Gentoo in between.
+## Alt-text: A vertical bar chart compares the number of penguins across three species. The x-axis shows species (Adelie, Chinstrap, Gentoo) and the y-axis shows “Number of Penguins,” ranging from 0 to about 160. Each species is represented by a single solid gray bar. The Adelie bar is the tallest at just over 150 penguins, Gentoo is second at around 120, and Chinstrap is lowest at roughly 70. The chart indicates that Adelie penguins are most numerous in this dataset, followed by Gentoo, with Chinstrap being least abundant.
 
-Note: Exact counts for each bar are not printed on the chart, so values are estimated from the axis gridlines.
+Assumptions: Exact counts are estimated visually from the bar heights because numeric labels are not provided.
 
 Checklist  
 1. Identified chart type. YES  
@@ -13,4 +13,4 @@ Checklist
 
 ## Caption (for reference): NA
 
-## Usage: Visualisation, Cummulated cost: 0.004, Cummulated token usage: 1227
+## Usage: Visualisation, Cummulated cost: 0.004, Cummulated token usage: 1309

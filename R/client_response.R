@@ -115,13 +115,24 @@ client_responses <- function(body_list, content) {
   for (i in seq_along(content)) {
     # For image input
     if (kind == "alt_item_image") {
-      client_input <- list(
-        ellmer::content_image_file(
-          path = content[[i]]$image_path,
-          content_type = "auto",
-          resize = "high"
-        )
+      # client_input <- list(
+      #   ellmer::content_image_file(
+      #     path = content[[i]]$image_path,
+      #     content_type = "auto",
+      #     resize = "high"
+      #   )
+      # )
+      client_input <- lapply(
+        content[[i]]$image_path,
+        function(p) {
+          ellmer::content_image_file(
+            path = p,
+            content_type = "auto",
+            resize = "high"
+          )
+        }
       )
+
       # For RMD/QMD input
     } else if (nzchar(paste(content[[i]]$chunk_code, collapse = ""))) {
       # Token limit : 30000 / 7500 char
@@ -249,8 +260,11 @@ system_prompt <- function(kind) {
     kind,
     alt_item_code = " You are a researcher tasked with generating one concise version of alt-text for a graph, based on R code, BrailleR output, and reference text.
     Your role is to analyse the available information (R code, BrailleR output, statistical summaries, and reference text) and produce clear, informative alt-text that: ",
-    alt_item_image = " You are a researcher tasked with generating one concise version of alt-text for a graph, based on image provided and reference text.
-    Read the value directly from the image. Produce clear, informative alt-text that: "
+    # alt_item_image = " You are a researcher tasked with generating one concise version of alt-text for a graph, based on image(s) provided and reference text.
+    # Read the value directly from the image. Produce clear, informative alt-text that: "
+    alt_item_image = "You are a researcher tasked with generating one concise version of alt-text for a graph, based on the image(s) provided and reference text.
+    You may be given more than one image. When you are, they are panels or views of a single figure, not separate figures. Describe them together as one graph: note what the panels share, such as chart type, axes and scales, and how they differ from one another. Produce exactly one piece of alt-text covering all of them, never one description per image.
+    Read the values directly from the image(s). Produce clear, informative alt-text that:"
   )
 
   end <- switch(
@@ -363,23 +377,48 @@ generate_alt_text.image <- function(
   openai_model = "gpt-5.1",
   api = NULL,
   user_instruct = "",
-  captions = NULL
+  captions = NULL,
+  combine = FALSE
 ) {
   outfile <- validate_input(outfile, api)
 
   files <- expand_paths(flnm)
 
-  # For i in images
-  items <- lapply(files, function(i) {
-    key <- basename(i) # File name (without the full directory) as key
-    new_alt_item(
-      kind = "image",
-      label = tools::file_path_sans_ext(key), # Image name without extension
-      source = i,
-      reference_paragraph = if (!is.null(captions)) captions[i] else NULL,
-      image_path = i
+  # Validate captions
+  if (isTRUE(combine) && !is.null(captions) && length(captions) != 1) {
+    stop("When `combine = TRUE`, supply a single caption for the whole figure.")
+  }
+
+  # Option to evaluate multiple images to produce a single Alt-text
+  items <- if (isTRUE(combine)) {
+    # Upload all images in one API call -> produces a single alt-text
+    list(
+      new_alt_item(
+        kind = "image",
+        label = if (length(files) == 1) {
+          tools::file_path_sans_ext(basename(files))
+        } else {
+          basename(dirname(files[1]))
+        },
+        source = files,
+        reference_paragraph = if (!is.null(captions)) captions[[key]] else NULL,
+        image_path = files
+      )
     )
-  })
+  } else {
+    # Upload one image per API call -> length(files) x alt-text
+    # For i in images
+    lapply(files, function(i) {
+      key <- basename(i) # File name (without the full directory) as key
+      new_alt_item(
+        kind = "image",
+        label = tools::file_path_sans_ext(key), # Image name without extension
+        source = i,
+        reference_paragraph = if (!is.null(captions)) captions[[key]] else NULL,
+        image_path = i
+      )
+    })
+  }
 
   body_list <- list(
     model = openai_model,

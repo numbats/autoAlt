@@ -1,0 +1,34 @@
+# Chunk label: bar-chart --------------------
+## Alt-text: Vertical bar chart showing the number of penguins by species. The x-axis lists three categories: Adelie, Chinstrap, and Gentoo. The y-axis is “Number of Penguins,” ranging from 0 to 150 in increments of 25. Each species is represented by a single solid dark-grey bar. The Adelie bar is the tallest at just over 150 penguins, Gentoo is second at about 125 penguins, and Chinstrap is lowest at roughly 70 penguins. This indicates Adelie penguins are most numerous in the dataset, followed by Gentoo, with Chinstrap the least common.
+
+Assumptions/notes: Values are approximate, read from bar heights relative to axis gridlines.
+
+Checklist:
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): NA
+
+## Usage: Visualisation, Cummulated cost: 0.004, Cummulated token usage: 1219
+
+
+# Chunk label: box-plot --------------------
+## Alt-text: Boxplot comparing penguin body mass by species. The x‑axis shows three categories: Adelie, Chinstrap, and Gentoo. The y‑axis shows body mass in grams from about 2800 g to 6200 g. Each species is represented by a single vertical box: the box spans the interquartile range, a horizontal line marks the median, and whiskers extend to adjacent values, with individual dots marking outliers. Adelie and Chinstrap have similar body masses, with medians around the mid‑ to high‑3000 g range and overall ranges from roughly 2800–4700 g; Chinstrap shows at least two outliers, one low (around 2700 g) and one high (around 4800 g). Gentoo penguins are clearly heavier, with a median near 5000 g and values ranging roughly from 4000 g to above 6000 g, showing a distribution shifted upward compared with the other two species.
+
+Assumptions/notes: Values such as medians and extremes are visually estimated from the axis scale and may not match exact underlying data.
+
+Checklist  
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): NA
+
+## Usage: Visualisation, Cummulated cost: 0.008, Cummulated token usage: 1300

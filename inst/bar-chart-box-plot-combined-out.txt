@@ -1,0 +1,16 @@
+# Chunk label: figures --------------------
+## Alt-text: A two-panel figure compares penguin species by abundance and body mass. The left panel is a vertical bar chart with Species on the x‑axis (Adelie, Chinstrap, Gentoo) and Number of Penguins on the y‑axis from 0 to a little above 150. Adelie has the tallest bar at just over 150 individuals, Gentoo is second at roughly 125, and Chinstrap is lowest at about 70, indicating Adelie are most numerous and Chinstrap least numerous. The right panel is a boxplot of Body Mass (g) by Species, with the y‑axis ranging from about 2600 to 6400 g. Adelie and Chinstrap have similar distributions: medians around 3650–3700 g, interquartile ranges roughly 3400–3950 g, whiskers spanning about 2800–4700 g, and a few low and high outliers. Gentoo are clearly heavier, with a median near 5000 g, an interquartile range around 4700–5500 g, and whiskers extending from roughly 4000 to over 6200 g, showing that although Adelie are most common, Gentoo tend to have substantially higher body mass than the other two species.
+
+Assumptions: Exact counts and gram values are estimated visually from axis ticks because precise labels are not provided.
+
+Checklist  
+1. Identified chart type. YES  
+2. Named axes and variables. YES  
+3. Mentioned approximate ranges or scales (where meaningful). YES  
+4. Described data mappings (e.g. colour/shape/size/facets). YES  
+5. Described main patterns, trends, or clusters. YES  
+6. Explicitly noted any assumptions. YES
+
+## Caption (for reference): NA
+
+## Usage: Visualisation, Cummulated cost: 0.006, Cummulated token usage: 2084

@@ -1,34 +1,16 @@
-# Chunk label: bar-chart --------------------
-## Alt-text: Vertical bar chart showing the number of penguins by species. The x-axis lists three categories: Adelie, Chinstrap, and Gentoo. The y-axis is “Number of Penguins,” ranging from 0 to 150 in increments of 25. Each species is represented by a single solid dark-grey bar. The Adelie bar is the tallest at just over 150 penguins, Gentoo is second at about 125 penguins, and Chinstrap is lowest at roughly 70 penguins. This indicates Adelie penguins are most numerous in the dataset, followed by Gentoo, with Chinstrap the least common.
+# Chunk label: figures --------------------
+## Alt-text: Single figure with two panels comparing penguin species. Left panel is a vertical bar chart with Species (Adelie, Chinstrap, Gentoo) on the x-axis and Number of Penguins on the y-axis from 0 to about 160. Adelie has the tallest bar at just over 150 individuals, Gentoo is second at around 125, and Chinstrap is lowest at roughly 70, indicating Adelie are most common and Chinstrap least common in the sample. Right panel is a set of three vertical boxplots showing Body Mass (g) on the y-axis from about 2600 to 6400 against the same Species on the x-axis. Adelie and Chinstrap have similar body-mass distributions, with medians near 3700 g and interquartile ranges roughly 3400–4000 g; each shows a few lower or upper outliers. Gentoo boxplot is shifted upward, with a median near 5000 g and interquartile range around 4700–5400 g, plus whiskers extending to about 4000 and 6300 g, indicating Gentoo are generally heavier than the other two species.
 
-Assumptions/notes: Values are approximate, read from bar heights relative to axis gridlines.
+Assumptions: Axis limits and exact counts and body masses are estimated visually from the plotted scales, as precise numeric labels are not provided.
 
 Checklist:
-1. Identified chart type. YES  
-2. Named axes and variables. YES  
-3. Mentioned approximate ranges or scales (where meaningful). YES  
-4. Described data mappings (e.g. colour/shape/size/facets). YES  
-5. Described main patterns, trends, or clusters. YES  
+1. Identified chart type. YES
+2. Named axes and variables. YES
+3. Mentioned approximate ranges or scales (where meaningful). YES
+4. Described data mappings (e.g. colour/shape/size/facets). YES
+5. Described main patterns, trends, or clusters. YES
 6. Explicitly noted any assumptions. YES
 
-## Caption (for reference): NA
+## Caption (for reference): This is a caption
 
-## Usage: Visualisation, Cummulated cost: 0.004, Cummulated token usage: 1219
-
-
-# Chunk label: box-plot --------------------
-## Alt-text: Boxplot comparing penguin body mass by species. The x‑axis shows three categories: Adelie, Chinstrap, and Gentoo. The y‑axis shows body mass in grams from about 2800 g to 6200 g. Each species is represented by a single vertical box: the box spans the interquartile range, a horizontal line marks the median, and whiskers extend to adjacent values, with individual dots marking outliers. Adelie and Chinstrap have similar body masses, with medians around the mid‑ to high‑3000 g range and overall ranges from roughly 2800–4700 g; Chinstrap shows at least two outliers, one low (around 2700 g) and one high (around 4800 g). Gentoo penguins are clearly heavier, with a median near 5000 g and values ranging roughly from 4000 g to above 6000 g, showing a distribution shifted upward compared with the other two species.
-
-Assumptions/notes: Values such as medians and extremes are visually estimated from the axis scale and may not match exact underlying data.
-
-Checklist  
-1. Identified chart type. YES  
-2. Named axes and variables. YES  
-3. Mentioned approximate ranges or scales (where meaningful). YES  
-4. Described data mappings (e.g. colour/shape/size/facets). YES  
-5. Described main patterns, trends, or clusters. YES  
-6. Explicitly noted any assumptions. YES
-
-## Caption (for reference): NA
-
-## Usage: Visualisation, Cummulated cost: 0.008, Cummulated token usage: 1300
+## Usage: Visualisation, Cummulated cost: 0.006, Cummulated token usage: 2078

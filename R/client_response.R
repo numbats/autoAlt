@@ -1,3 +1,5 @@
+# Helper Functions ------------------------------------------------------------------
+
 # Accepted extension
 DOC_EXT <- c("qmd", "rmd")
 IMG_EXT <- c("png", "jpg", "jpeg", "webp", "gif")
@@ -27,7 +29,7 @@ determine_class <- function(input) {
   structure(input, class = cls)
 }
 
-# Rationale: Ideally, we want mulitple input (null plot and line up plot)
+# Rationale: Ideally, we want mulitple inputs (e.g. null plot and line up plot)
 expand_paths <- function(input) {
   files <- unlist(lapply(input, function(p) {
     if (dir.exists(p)) {
@@ -86,6 +88,81 @@ new_alt_item <- function(kind, label, source, reference_paragraph = NULL, ...) {
     class = c(paste0("alt_item_", kind), "alt_item")
   )
 }
+
+
+#' This function returns a list of length n where n = length(input_files)
+lookup_captions <- function(captions, files, combine) {
+  n <- length(files)
+
+  # No caption provided: NA for all n in files
+  if (is.null(captions)) {
+    return(rep(NA_character_, n))
+  }
+
+  if (!is.character(captions)) {
+    stop("Captions mustbe a character vector, not ", class(captions), ".")
+  }
+
+  # Combine is true but more than 1 captions provided
+  if (isTRUE(combine) && !is.null(captions) && length(captions) != 1) {
+    stop("When `combine = TRUE`, supply a single caption for the whole figure.")
+  }
+
+  # Combined is not true, but less than n number of captions provided (does not consider cases when captions == NULL)
+  if (length(captions) > 1 && !isTRUE(combine) && length(captions) != n) {
+    stop(
+      "Captions has length ",
+      length(captions),
+      " but there are ",
+      n,
+      " images. Please supply one caption per image."
+    )
+  }
+
+  keys <- basename(files)
+
+  # Only 1 caption provided: a character string or vector of length 1
+  if (length(captions) == 1) {
+    if (n > 1) {
+      message("Applying the same caption to all ", n, " images.")
+    }
+    return(rep(captions, n))
+  }
+
+  # Match caption value based on key -------------------------------
+  if (!is.null(names(captions))) {
+    if (any(!nzchar(names(captions)))) {
+      stop("Captions must either be fully named or entirely unnamed.")
+    }
+
+    leftover <- setdiff(names(captions), keys)
+
+    # Ideally all captions should be a member of keys
+    if (length(leftover) > 0) {
+      warning(
+        "No image matches these caption names(s): ",
+        paste(leftover, collapse = ", "),
+        ". Caption names/keys must be file names including the extension."
+      )
+    }
+
+    out <- unname(captions[match(keys, names(captions))]) # Retain only the caption value
+
+    return(as.character(out))
+  }
+
+  # All captions are unnamed: matched by position
+  if (length(captions) == n) {
+    warning(
+      "Captions is unnamed, so it is matched to the image by position. ",
+      "To ensure each caption correspond to the right image, please name it by the file name including the extension."
+    )
+
+    return(captions)
+  }
+}
+
+# HTTP Request ----------------------------------------------------------------------
 
 client_responses <- function(body_list, content) {
   if (length(content) == 0) {
@@ -385,9 +462,7 @@ generate_alt_text.image <- function(
   files <- expand_paths(flnm)
 
   # Validate captions
-  if (isTRUE(combine) && !is.null(captions) && length(captions) != 1) {
-    stop("When `combine = TRUE`, supply a single caption for the whole figure.")
-  }
+  caption <- lookup_captions(captions, files, combine)
 
   # Option to evaluate multiple images to produce a single Alt-text
   items <- if (isTRUE(combine)) {
@@ -401,21 +476,21 @@ generate_alt_text.image <- function(
           basename(dirname(files[1]))
         },
         source = files,
-        reference_paragraph = if (!is.null(captions)) captions[[key]] else NULL,
+        reference_paragraph = if (is.na(caption[1])) NULL else caption[1],
         image_path = files
       )
     )
   } else {
     # Upload one image per API call -> length(files) x alt-text
     # For i in images
-    lapply(files, function(i) {
-      key <- basename(i) # File name (without the full directory) as key
+    lapply(seq_along(files), function(i) {
+      key <- basename(files[i]) # File name (without the full directory) as key
       new_alt_item(
         kind = "image",
         label = tools::file_path_sans_ext(key), # Image name without extension
-        source = i,
-        reference_paragraph = if (!is.null(captions)) captions[[key]] else NULL,
-        image_path = i
+        source = files[i],
+        reference_paragraph = if (is.na(caption[i])) NULL else caption[i],
+        image_path = files[i]
       )
     })
   }

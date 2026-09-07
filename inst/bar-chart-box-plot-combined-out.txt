@@ -1,7 +1,7 @@
 # Chunk label: figures --------------------
-## Alt-text: A two-panel figure compares penguin species by abundance and body mass. The left panel is a vertical bar chart with Species on the x‑axis (Adelie, Chinstrap, Gentoo) and Number of Penguins on the y‑axis from 0 to a little above 150. Adelie has the tallest bar at just over 150 individuals, Gentoo is second at roughly 125, and Chinstrap is lowest at about 70, indicating Adelie are most numerous and Chinstrap least numerous. The right panel is a boxplot of Body Mass (g) by Species, with the y‑axis ranging from about 2600 to 6400 g. Adelie and Chinstrap have similar distributions: medians around 3650–3700 g, interquartile ranges roughly 3400–3950 g, whiskers spanning about 2800–4700 g, and a few low and high outliers. Gentoo are clearly heavier, with a median near 5000 g, an interquartile range around 4700–5500 g, and whiskers extending from roughly 4000 to over 6200 g, showing that although Adelie are most common, Gentoo tend to have substantially higher body mass than the other two species.
+## Alt-text: A two-panel figure compares penguin species counts and body mass. The left panel is a vertical bar chart with Species on the x‑axis (Adelie, Chinstrap, Gentoo) and Number of Penguins on the y‑axis from 0 to about 160. Adelie has the tallest bar at just over 150 individuals, Gentoo is second at roughly 120, and Chinstrap is lowest at about 70, indicating Adelie are the most numerous and Chinstrap the least numerous in the sample. The right panel is a set of three vertical boxplots showing Body Mass (g) on the y‑axis from about 2600 to 6400 by Species on the x‑axis. Adelie and Chinstrap have similar body-mass distributions with medians near 3700 g, interquartile ranges roughly 3400–4000 g, and whiskers extending from about 2800 to 4700 g, with a few Chinstrap outliers around 2700 g and 4800 g. Gentoo penguins are clearly heavier, with a median near 5000 g, an interquartile range roughly 4700–5500 g, and whiskers from about 4000 to 6300 g, showing that although they are not the most numerous, they have substantially higher body mass than the other species.
 
-Assumptions: Exact counts and gram values are estimated visually from axis ticks because precise labels are not provided.
+Assumptions/notes: Axis tick labels for some exact values are approximated from the grid; individual numeric values are estimated rather than read precisely.
 
 Checklist  
 1. Identified chart type. YES  
@@ -11,6 +11,6 @@ Checklist
 5. Described main patterns, trends, or clusters. YES  
 6. Explicitly noted any assumptions. YES
 
-## Caption (for reference): NA
+## Caption (for reference): NA NA
 
-## Usage: Visualisation, Cummulated cost: 0.006, Cummulated token usage: 2084
+## Usage: Visualisation, Cummulated cost: 0.004, Cummulated token usage: 585

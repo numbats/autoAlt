@@ -13,7 +13,7 @@ determine_class <- function(input) {
   is_img <- exts %in% IMG_EXT
 
   if (!any(is_doc | is_img)) {
-    return(structure(input, class = c("alt_unknown", "alt_input")))
+    return(structure(input, class = "alt_unknown"))
   }
 
   cls <- if (all(is_doc)) {
@@ -24,7 +24,7 @@ determine_class <- function(input) {
     "mixed"
   }
 
-  structure(input, class = c(cls, "alt_input"))
+  structure(input, class = cls)
 }
 
 # Rationale: Ideally, we want mulitple input (null plot and line up plot)
@@ -71,6 +71,8 @@ validate_input <- function(outfile, api) {
       "API key needs to be in a character string. Information on how to obtain an API key can be found here: https://help.openai.com/en/collections/3675931-api"
     )
   }
+
+  return(outfile)
 }
 
 new_alt_item <- function(kind, label, source, reference_paragraph = NULL, ...) {
@@ -90,7 +92,7 @@ client_responses <- function(body_list, content) {
     stop("No plots found in the supplied input")
   }
 
-  kind <- content[[1]]$kind # class "alt_item_code" or "alt_item_image"
+  kind <- class(content[[1]])[1] # class "alt_item_code" or "alt_item_image"
 
   chat <- ellmer::chat_openai(
     model = body_list$model,
@@ -98,7 +100,7 @@ client_responses <- function(body_list, content) {
     system_prompt = paste(body_list$user_instruct, system_prompt(kind))
   )
 
-  usage_tag <- if (kind == "image") "Visualisation" else "BrailleR"
+  usage_tag <- if (kind == "alt_item_image") "Visualisation" else "BrailleR"
 
   output <- data.frame(
     chunk_label = character(0),
@@ -174,7 +176,7 @@ client_responses <- function(body_list, content) {
     )
 
     total_cost <- total_cost + chat$get_cost()[1]
-    total_tokens <- total_token + sum(chat$get_tokens()[3])[1]
+    total_tokens <- total_token + sum(chat$get_tokens()[1:2])[1]
 
     usage <- paste0(
       usage_tag,
@@ -185,8 +187,8 @@ client_responses <- function(body_list, content) {
     )
 
     output[nrow(output) + 1, ] <- list(
-      content[[i]]$chunk_label,
-      response,
+      content[[i]]$label,
+      respond,
       if (is.null(content[[i]]$reference_paragraph)) {
         NA_character_
       } else {
@@ -214,6 +216,51 @@ write_alt_text <- function(input, outfile) {
 
   writeLines(alt_text, outfile)
   message(paste0("Output saved to ", outfile))
+}
+
+
+# System Prompt ---------------------------------------------------------------------
+
+altText_guideline <- "
+Naturally describes:
+    - the chart type
+    - the variables on each axis
+    - approximate axis ranges
+    - how data are mapped to visual elements (e.g. colour, shape, size, facets)
+    - any visible patterns, relationships, clusters, trends, or notable outliers
+    - Includes brief interpretation of the data where this is relevant to understanding the plot.
+    - Avoids starting with phrases such as “Alt-text:” and does not use labels like “Iteration”.
+
+If the prompt lacks detail, make reasonable assumptions. Clearly flag these assumptions in a short note after the alt-text.
+After you have written the alt-text, generate a short checklist confirming whether you have covered the following items for this specific graph:
+
+1. Identified chart type.
+2. Named axes and variables.
+3. Mentioned approximate ranges or scales (where meaningful).
+4. Described data mappings (e.g. colour/shape/size/facets).
+5. Described main patterns, trends, or clusters.
+6. Explicitly noted any assumptions.
+
+For each checklist item, respond with “YES” or “NO”.
+"
+
+system_prompt <- function(kind) {
+  begin <- switch(
+    kind,
+    alt_item_code = " You are a researcher tasked with generating one concise version of alt-text for a graph, based on R code, BrailleR output, and reference text.
+    Your role is to analyse the available information (R code, BrailleR output, statistical summaries, and reference text) and produce clear, informative alt-text that: ",
+    alt_item_image = " You are a researcher tasked with generating one concise version of alt-text for a graph, based on image provided and reference text.
+    Read the value directly from the image. Produce clear, informative alt-text that: "
+  )
+
+  end <- switch(
+    kind,
+    alt_item_code = "Do not provide separate explanations or interpretations of the R code, reference text, or BrailleR output. Use them only as sources to inform the single piece of alt-text and the checklist.",
+    alt_item_image = "Do not guess at number you cannot see. If any part of the image is illegible or ambigious, say so in a short note after the alt-text rather than inventing a value. 
+    Do not provide separate explanations or interpretations of the image or reference text. Use them only as sources to inform the single piece of alt-text and the checklist."
+  )
+
+  paste0(begin, altText_guideline, end)
 }
 
 #
@@ -267,7 +314,7 @@ generate_alt_text.rmd <- function(flnm = NULL, ...) {
   stop("Incomplete")
 }
 
-
+#' @export
 generate_alt_text.qmd <- function(
   flnm = NULL,
   outfile = NULL,

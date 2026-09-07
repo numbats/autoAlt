@@ -7,7 +7,7 @@
 generate_alt_text(
   flnm = NULL,
   outfile = NULL,
-  openai_model = "gpt-4.1",
+  openai_model = "gpt-5.1",
   api = NULL,
   user_instruct = ""
 )

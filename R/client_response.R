@@ -167,7 +167,7 @@ generate_alt_text.image <- function(
       new_alt_item(
         kind = "image",
         label = if (length(files) == 1) {
-          tools::file_path_sans_ext(basename(files))
+          basename(files)
         } else {
           basename(dirname(files[1]))
         },
@@ -183,7 +183,7 @@ generate_alt_text.image <- function(
       key <- basename(files[i]) # File name (without the full directory) as key
       new_alt_item(
         kind = "image",
-        label = tools::file_path_sans_ext(key), # Image name without extension
+        label = key,
         source = files[i],
         reference_paragraph = if (is.na(caption[i])) NULL else caption[i],
         image_path = files[i]
@@ -404,6 +404,9 @@ client_responses <- function(body_list, content) {
       #     resize = "high"
       #   )
       # )
+
+      message(paste0("Evaluating: ", content[[i]]$label))
+
       client_input <- lapply(
         content[[i]]$image_path,
         function(p) {
@@ -500,7 +503,7 @@ client_responses <- function(body_list, content) {
 
 
 write_alt_text <- function(input, outfile) {
-  if (stringr::str_detect(tolower(input$usage), "visualisation")) {
+  if (all(stringr::str_detect(tolower(input$usage), "visualisation"))) {
     label <- "# Image: {input$chunk_label} --------------------"
   } else {
     label <- "# Chunk label: {input$chunk_label} --------------------"

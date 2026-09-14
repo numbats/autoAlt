@@ -23,7 +23,7 @@ After you have written the alt-text, generate a short checklist confirming wheth
 For each checklist item, respond with “YES” or “NO”.
 "
 
-system_prompt <- function(kind) {
+system_prompt <- function(kind, user_instruct = NULL) {
   begin <- switch(
     kind,
     alt_item_code = " You are a researcher tasked with generating one concise version of alt-text for a graph, based on R code, BrailleR output, and reference text.
@@ -42,7 +42,12 @@ system_prompt <- function(kind) {
     Do not provide separate explanations or interpretations of the image or reference text. Use them only as sources to inform the single piece of alt-text and the checklist."
   )
 
-  paste0(begin, altText_guideline, end)
+  additional_instruct <- paste0(
+    " \n\n The following instructions came from the user and take precedence over any conflicting guidance above. \n\n",
+    user_instruct
+  )
+
+  paste0(begin, altText_guideline, end, additional_instruct)
 }
 
 #
@@ -374,7 +379,7 @@ client_responses <- function(body_list, content) {
   chat <- ellmer::chat_openai(
     model = body_list$model,
     api_key = body_list$api_key,
-    system_prompt = paste(body_list$user_instruct, system_prompt(kind))
+    system_prompt = system_prompt(kind, body_list$user_instruct)
   )
 
   usage_tag <- if (kind == "alt_item_image") "Visualisation" else "BrailleR"

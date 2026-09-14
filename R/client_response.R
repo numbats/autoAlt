@@ -447,6 +447,7 @@ client_responses <- function(body_list, content) {
           "Interpret this code and use the interpretation to generate alt-text: ",
           paste(content[[i]]$chunk_code, collapse = "\n")
         ))
+        usage_tag <- "Code"
       } else {
         list(paste0("BrailleR input: ", braille_text))
       }
@@ -499,8 +500,14 @@ client_responses <- function(body_list, content) {
 
 
 write_alt_text <- function(input, outfile) {
+  if (stringr::str_detect(tolower(input$usage), "visualisation")) {
+    label <- "# Image: {input$chunk_label} --------------------"
+  } else {
+    label <- "# Chunk label: {input$chunk_label} --------------------"
+  }
+
   alt_text <- glue::glue(
-    "# Chunk label: {input$chunk_label} --------------------",
+    label,
     "\n## Alt-text: {input$response}",
     "\n\n## Caption (for reference): {input$reference_paragraph}",
     "\n\n## Usage: {input$usage}",
